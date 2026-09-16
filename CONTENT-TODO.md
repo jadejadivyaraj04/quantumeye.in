@@ -125,9 +125,10 @@ would both earn their place:
 | Scan | The prescription capture is the whole premise and is the one screen not shown |
 | History | Monthly adherence ring, the calendar, and Share with doctor |
 
-Two details would sharpen the copy when they are confirmed: how Gemini Nano is
-reached from Flutter (ML Kit GenAI, AICore over a platform channel, or a
-plugin), and whether the scan is Nano reading the image or OCR feeding Nano.
+Corrected Sep 2026: the model is Gemma, hosted on GitHub and downloaded to the
+device - not Gemini Nano, which the first draft of this copy claimed. One
+detail still open: whether the model reads the prescription image directly, or
+OCR extracts the text and the model structures it.
 
 The project folder is no longer at `~/WorkSpace/personal_mvp/medha`, so these
 cannot be captured here the way InstaPour and Simul were.

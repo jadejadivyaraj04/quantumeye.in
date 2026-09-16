@@ -621,12 +621,13 @@ export const explorations: Exploration[] = [
       "Monthly adherence calendar, exported as a PDF for the doctor",
       "Opt-in caregiver contact, where the user chooses what is shared",
       "Several patients on one phone",
+      "The model downloads to the phone once, and nothing leaves it afterwards",
     ],
     constraint:
-      "Medicine data is about as sensitive as anything a phone carries, and the people who most need the reminders are the least likely to manage an account or a cloud setting. So there is no account and no server: Gemini Nano runs on the device, and the home screen says so in as many words. Everything - reading the prescription, answering the question, speaking it back - has to fit inside what the phone can do offline.",
+      "Medicine data is about as sensitive as anything a phone carries, and the people who most need the reminders are the least likely to manage an account or a cloud setting. So there is no account and no server: a Gemma model is downloaded to the phone on first run and everything happens there, which the home screen says in as many words. Everything - reading the prescription, answering the question, speaking it back - has to fit inside what the phone can do offline.",
     stack: [
       "Flutter",
-      "Gemini Nano",
+      "Gemma",
       "On-device LLM",
       "Text-to-speech",
       "Local notifications",
@@ -799,8 +800,7 @@ export const capabilities: CapabilityGroup[] = [
     group: "AI & ML",
     blurb: "Current R&D. On-device first, where the constraint is the phone.",
     items: [
-      { name: "Gemini Nano", note: "On-device, bridged into Flutter" },
-      { name: "Gemma 3 1B", note: "On-device, via MediaPipe LiteRT" },
+      { name: "Gemma", note: "On-device, downloaded to the phone" },
       { name: "ML Kit OCR", note: "Receipt text, and an amount cross-check" },
       { name: "MCP", note: "Tools and UI resources over a REST backend" },
       { name: "ChatGPT Apps SDK", note: "Widgets rendered inside the chat" },
