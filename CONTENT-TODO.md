@@ -35,22 +35,28 @@ these are outstanding.
   Nov 2023, and the Nike / BBC Earth / My Link copy pulled back to what the
   résumé actually supports.
 
-## 0. Dashboard — what is needed from you
+## 0. Dashboard — where it stands
 
-Phase 1 (the read path) is done and invisible: the site behaves exactly as
-before. The next phase needs a Firebase project, which only you can create:
+The repository is the database. Content lives at `content/content.json`, every
+save is a commit, and the live site reads that file from GitHub's CDN - no
+rebuild, no deploy, no service to keep alive.
 
-1. A project with **Firestore**, **Storage** and **Authentication → Google** on.
-2. The web config object (apiKey, projectId, …). These are public by design -
-   `firebase/*.rules` is what actually protects the data.
-3. Sign in once so I can read your UID and replace `ADMIN_UID` in both rule
-   files.
-4. Run `gsutil cors set firebase/cors.json gs://<project>.appspot.com`, or tell
-   me and I will. Without it the browser blocks the content fetch and the site
-   quietly stays on its bundled copy.
+**Done:** the read path (bundled copy first, published file swapped in when it
+validates), the GitHub client, the sign-in, and the shell with its section
+list and publish log.
 
-Then: seed Firestore from the bundled content (one click in the dashboard, so
-no Node TypeScript loader is needed), build the editors, and wire publish.
+**Needs you, once:** a fine-grained token at GitHub → Settings → Developer
+settings → Fine-grained tokens, scoped to `quantumeye.in` alone, with
+**Contents: read and write**. Paste it into `/admin`. Never paste it into a
+chat or commit it.
+
+**Then, in order:**
+
+1. Press "Publish the current content" in the dashboard. That commits today's
+   copy as the first `content/content.json`; the site does not change.
+2. Set `VITE_CONTENT_URL` to the raw URL of that file and redeploy once. From
+   then on, edits go live without a deploy.
+3. Editors for each section, media upload, and draft/publish.
 
 ## 1. Blocking — do these first
 
