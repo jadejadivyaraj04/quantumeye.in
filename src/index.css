@@ -213,6 +213,15 @@
 .mask-up { animation: mask-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .fade    { animation: fade-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
+/* The header drops in on load. It was a Framer transform, which left the bar
+   stranded above the viewport whenever rAF was throttled - the whole
+   navigation, gone, on exactly the renderers least able to report it. */
+@keyframes drop-in {
+  from { transform: translateY(-100%); }
+  to   { transform: none; }
+}
+.drop-in { animation: drop-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
+
 @keyframes soft-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.45; }

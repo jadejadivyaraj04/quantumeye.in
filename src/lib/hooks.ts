@@ -19,10 +19,16 @@ export function useActiveSection(ids: readonly string[]): string {
 
     const io = new IntersectionObserver(
       (entries) => {
+        // Two sections intersect the band whenever one is handing over to
+        // the next, so take the lowest of them - the one being entered.
+        // Taking the topmost, as this did, named the section being left, and
+        // the header and the nav underline both ran one behind all the way
+        // down the page.
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) setActive(visible[0].target.id);
+        const entering = visible[visible.length - 1];
+        if (entering) setActive(entering.target.id);
       },
       { rootMargin: "-20% 0px -70% 0px", threshold: 0 },
     );
@@ -61,6 +67,28 @@ export function useEscape(onEscape: () => void, active = true) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onEscape, active]);
+}
+
+/**
+ * True once the visitor is properly into the page, false again near the top.
+ *
+ * Two thresholds rather than one: a single boundary flickers when a scroll
+ * ends exactly on it, or when momentum oscillates a pixel either way, and a
+ * header that flickers between two shapes is worse than one that never
+ * changes. It condenses at `enter` and only expands again below `exit`.
+ */
+export function useCondensed(enter = 160, exit = 70): boolean {
+  const [condensed, setCondensed] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setCondensed((was) => (was ? y > exit : y > enter));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [enter, exit]);
+  return condensed;
 }
 
 /** True once the visitor has scrolled past `px`. Drives the header state. */

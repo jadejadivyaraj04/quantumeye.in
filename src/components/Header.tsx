@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { sections } from "../data/portfolio";
 import { useContent } from "../lib/content";
 import Logo from "./Logo";
-import { useActiveSection, useScrolled } from "../lib/hooks";
+import { useActiveSection, useCondensed, useScrolled } from "../lib/hooks";
 import { ease } from "../lib/motion";
 
 /**
@@ -17,6 +17,11 @@ export default function Header() {
   const { identity } = content;
   const active = useActiveSection(sections.map((s) => s.id));
   const scrolled = useScrolled(20);
+  /* Past the hero the header condenses: less height, a smaller mark, and the
+     name swapped for where you actually are. Coming back to the top restores
+     it, which is why the hook has two thresholds rather than one. */
+  const condensed = useCondensed();
+  const here = sections.find((s) => s.id === active)?.label ?? "";
   const [open, setOpen] = useState(false);
 
   const { scrollYProgress } = useScroll();
@@ -35,31 +40,60 @@ export default function Header() {
         Skip to content
       </a>
 
-      <motion.header
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
+      <header
+        className={`drop-in fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
           scrolled
             ? "border-b border-rule bg-ground/85 backdrop-blur-xl"
             : "border-b border-transparent"
         }`}
-        initial={{ y: -72 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.7, ease, delay: 0.15 }}
       >
         <nav
           aria-label="Primary"
-          className="shell flex items-center justify-between py-3.5"
+          className={`shell flex items-center justify-between transition-[padding] duration-[420ms] ease-out ${
+            condensed ? "py-1.5" : "py-3.5"
+          }`}
         >
           <a
             href="#top"
             className="group flex h-11 items-center gap-2.5 text-ink"
             aria-label="Back to top"
           >
-            <Logo />
-            <span className="font-display text-[0.94rem] font-semibold tracking-tight">
-              {identity.firstName}
-              <span className="hidden text-ink-soft sm:inline">
-                {" "}
-                {identity.lastName}
+            <span
+              className={`flex items-center transition-transform duration-[420ms] ease-out ${
+                condensed ? "scale-[0.84]" : "scale-100"
+              }`}
+            >
+              <Logo />
+            </span>
+
+            {/* Name and place, stacked in one cell and crossfaded: the name
+                is who you are, the section is where you are, and only one of
+                them is worth the space at a time. */}
+            <span className="grid">
+              <span
+                className={`col-start-1 row-start-1 font-display text-[0.94rem] font-semibold tracking-tight whitespace-nowrap transition-all duration-300 ease-out ${
+                  condensed
+                    ? "-translate-y-1.5 opacity-0"
+                    : "translate-y-0 opacity-100"
+                }`}
+                aria-hidden={condensed}
+              >
+                {identity.firstName}
+                <span className="hidden text-ink-soft sm:inline">
+                  {" "}
+                  {identity.lastName}
+                </span>
+              </span>
+
+              <span
+                className={`label-mono col-start-1 row-start-1 self-center whitespace-nowrap text-ink-soft transition-all duration-300 ease-out ${
+                  condensed
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-1.5 opacity-0"
+                }`}
+                aria-hidden={!condensed}
+              >
+                {here}
               </span>
             </span>
           </a>
@@ -73,7 +107,9 @@ export default function Header() {
                   <a
                     href={`#${s.id}`}
                     aria-current={on ? "true" : undefined}
-                    className={`relative flex h-11 items-center px-3.5 text-[0.86rem] transition-colors ${
+                    className={`relative flex items-center px-3.5 text-[0.86rem] transition-all duration-300 ${
+                      condensed ? "h-9" : "h-11"
+                    } ${
                       on ? "text-ink" : "text-ink-soft hover:text-ink"
                     }`}
                   >
@@ -148,7 +184,7 @@ export default function Header() {
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.header>
+      </header>
     </>
   );
 }
