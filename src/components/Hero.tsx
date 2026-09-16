@@ -40,7 +40,7 @@ export default function Hero() {
   ];
 
   return (
-    <section id="top" ref={ref} className="relative pt-24 pb-14 sm:pt-32 sm:pb-20 lg:pt-36">
+    <section id="top" ref={ref} className="relative pt-20 pb-12 sm:pt-24 sm:pb-16 lg:pt-28">
       <div className="shell">
         <div className="grid items-start gap-10 sm:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] lg:gap-16">
           {/* ── Type column ────────────────────────────────────────── */}

@@ -107,6 +107,13 @@ outliving old files (`CONTENT_SHAPE`).
 With `VITE_CONTENT_URL` unset there is no request and no Firebase code
 anywhere in the bundle - the cost of the whole pipeline is 0.4KB gzip.
 
+**Vertical rhythm is one class too.** `.band` in `index.css` sets the padding
+above and below every section from a single `--band` custom property
+(3.25rem → 4.5rem → 5rem). It replaced `py-24 sm:py-32` repeated in eight
+components, which stacked into a 256px empty strip between every section - a
+quarter of a laptop screen, eight times down the page. It is now 104px on a
+phone and 160px at 1440, and changing it means editing two numbers.
+
 **Copy is bounded by the résumé.** `Divyaraj 2026.pdf` is the source of truth
 for roles, dates, institutions and what each project actually did. Three case
 studies were rewritten in Sep 2026 because the prose had drifted past it —

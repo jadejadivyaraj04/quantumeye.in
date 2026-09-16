@@ -27,7 +27,7 @@ export default function Writing() {
   return (
     <section
       id="writing"
-      className="scroll-mt-24 border-t border-rule bg-surface/40 py-24 sm:py-32"
+      className="scroll-mt-24 border-t border-rule bg-surface/40 band"
     >
       <div className="shell">
         <SectionHeading

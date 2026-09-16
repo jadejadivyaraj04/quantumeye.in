@@ -44,7 +44,7 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="relative scroll-mt-24 border-t border-rule bg-surface/40 py-24 sm:py-32"
+      className="relative scroll-mt-24 border-t border-rule bg-surface/40 band"
     >
       <div className="shell">
         <SectionHeading

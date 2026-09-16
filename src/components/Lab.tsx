@@ -103,7 +103,7 @@ export default function Lab() {
   const [open, setOpen] = useState<Exploration | null>(null);
 
   return (
-    <section id="lab" className="scroll-mt-24 py-24 sm:py-32">
+    <section id="lab" className="scroll-mt-24 band">
       <div className="shell">
         <SectionHeading
           index="02"

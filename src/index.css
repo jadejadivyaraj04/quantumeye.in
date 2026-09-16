@@ -164,6 +164,23 @@
   }
 }
 
+/*
+ * Vertical rhythm between sections, defined once for the same reason the
+ * shell is: it was `py-24 sm:py-32` repeated in eight components, which put a
+ * 256px empty band between every section - a quarter of a laptop screen of
+ * nothing, eight times over. Change the two values here, not in eight files.
+ */
+@layer components {
+  :root { --band: 3.25rem; }
+
+  @media (min-width: 640px) { :root { --band: 4.5rem; } }
+  @media (min-width: 1024px) { :root { --band: 5rem; } }
+
+  .band {
+    padding-block: var(--band);
+  }
+}
+
 /* ──────────────────────────────────────────────────── keyframes ──── */
 
 /*

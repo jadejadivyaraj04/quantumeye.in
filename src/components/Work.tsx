@@ -22,7 +22,7 @@ export default function Work() {
   const rest = caseStudies.filter((c) => !c.featured);
 
   return (
-    <section id="work" className="scroll-mt-24 py-24 sm:py-32">
+    <section id="work" className="scroll-mt-24 band">
       <div className="shell">
         <SectionHeading
           index="01"

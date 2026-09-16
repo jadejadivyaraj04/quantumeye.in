@@ -22,7 +22,7 @@ export default function Capabilities() {
   if (!group) return null;
 
   return (
-    <section id="capabilities" className="scroll-mt-24 border-t border-rule py-24 sm:py-32">
+    <section id="capabilities" className="scroll-mt-24 border-t border-rule band">
       <div className="shell">
         <SectionHeading
           index="05"
