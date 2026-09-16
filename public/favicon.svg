@@ -1,5 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0d0e12"/>
-  <text x="32" y="43" font-family="Helvetica,Arial,sans-serif" font-size="28"
-        font-weight="700" fill="#fcfcfd" text-anchor="middle" letter-spacing="-1">DJ</text>
+  <!-- Generated from src/components/Logo.tsx: same aperture, same constants.
+       If the mark is retuned there, regenerate rather than hand-editing. -->
+  <rect width="64" height="64" rx="14" fill="#faf9f7"/>
+  <circle cx="32" cy="32" r="27.73" fill="none" stroke="#191415" stroke-opacity="0.2" stroke-width="2.67"/>
+  <line x1="32.0" y1="18.93" x2="51.95" y2="12.73" stroke="#7b2434" stroke-opacity="0.7" stroke-width="3.73" stroke-linecap="round"/>
+  <line x1="43.32" y1="25.47" x2="58.66" y2="39.64" stroke="#7b2434" stroke-opacity="0.7" stroke-width="3.73" stroke-linecap="round"/>
+  <line x1="43.32" y1="38.53" x2="38.71" y2="58.91" stroke="#7b2434" stroke-opacity="0.7" stroke-width="3.73" stroke-linecap="round"/>
+  <line x1="32.0" y1="45.07" x2="12.05" y2="51.27" stroke="#7b2434" stroke-opacity="0.7" stroke-width="3.73" stroke-linecap="round"/>
+  <line x1="20.68" y1="38.53" x2="5.34" y2="24.36" stroke="#7b2434" stroke-opacity="0.7" stroke-width="3.73" stroke-linecap="round"/>
+  <line x1="20.68" y1="25.47" x2="25.29" y2="5.09" stroke="#7b2434" stroke-opacity="0.7" stroke-width="3.73" stroke-linecap="round"/>
+  <polygon points="32.0,18.93 43.32,25.47 43.32,38.53 32.0,45.07 20.68,38.53 20.68,25.47" fill="#7b2434"/>
 </svg>

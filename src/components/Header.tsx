@@ -2,6 +2,8 @@ import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { sections } from "../data/portfolio";
+import { useContent } from "../lib/content";
+import Logo from "./Logo";
 import { useActiveSection, useScrolled } from "../lib/hooks";
 import { ease } from "../lib/motion";
 
@@ -11,6 +13,8 @@ import { ease } from "../lib/motion";
  * reachable by keyboard or openable in a new tab.
  */
 export default function Header() {
+  const { content } = useContent();
+  const { identity } = content;
   const active = useActiveSection(sections.map((s) => s.id));
   const scrolled = useScrolled(20);
   const [open, setOpen] = useState(false);
@@ -47,22 +51,16 @@ export default function Header() {
         >
           <a
             href="#top"
-            className="group flex h-11 items-center gap-2.5"
+            className="group flex h-11 items-center gap-2.5 text-ink"
             aria-label="Back to top"
           >
-            <span className="relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-md bg-ink">
-              <span className="font-display text-[0.72rem] font-bold text-ground">
-                DJ
-              </span>
-              <motion.span
-                className="absolute inset-0 bg-accent"
-                initial={{ y: "100%" }}
-                whileHover={{ y: "0%" }}
-                transition={{ duration: 0.28, ease }}
-              />
-            </span>
+            <Logo />
             <span className="font-display text-[0.94rem] font-semibold tracking-tight">
-              Divyarajsinh
+              {identity.firstName}
+              <span className="hidden text-ink-soft sm:inline">
+                {" "}
+                {identity.lastName}
+              </span>
             </span>
           </a>
 

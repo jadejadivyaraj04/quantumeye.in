@@ -147,6 +147,14 @@ cards cannot stretch to match a taller neighbour.
 junior than years plus context, so capabilities carry a tenure or a concrete
 note instead.
 
+**The mark is an aperture, not a monogram.** `Logo.tsx` draws a six-bladed
+camera iris from three constants, and the favicon is generated from the same
+numbers - retune the component and regenerate rather than hand-editing the
+SVG. It replaced "DJ" in a black rounded square, which said nothing the name
+beside it did not, and it earns its hover: the blades rotate 30° and the
+opening stops down, the way a real aperture closes. The name is a nod to the
+domain rather than decoration.
+
 **The palette is sampled from the portrait.** The accent is the oxblood of
 the shirt in `public/portrait.jpg` (#3D1020–#752F3F), the ink comes from the
 hair, and `.studio-plate` reproduces the photograph's own backdrop gradient so
