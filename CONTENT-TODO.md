@@ -38,25 +38,29 @@ these are outstanding.
 ## 0. Dashboard — where it stands
 
 The repository is the database. Content lives at `content/content.json`, every
-save is a commit, and the live site reads that file from GitHub's CDN - no
-rebuild, no deploy, no service to keep alive.
+publish is a commit, and the live site reads that file from GitHub without a
+rebuild.
 
-**Done:** the read path (bundled copy first, published file swapped in when it
-validates), the GitHub client, the sign-in, and the shell with its section
-list and publish log.
+**Working:** sign-in, editors for all nine sections (add, edit, reorder,
+delete), drafts kept in the browser, publish-time validation, and commit notes
+generated from the diff. The first publish landed on 16 Sep 2026.
 
-**Needs you, once:** a fine-grained token at GitHub → Settings → Developer
-settings → Fine-grained tokens, scoped to `quantumeye.in` alone, with
-**Contents: read and write**. Paste it into `/admin`. Never paste it into a
-chat or commit it.
+**The one step left to make edits reach the live site:** set
 
-**Then, in order:**
+```
+VITE_CONTENT_URL=https://raw.githubusercontent.com/jadejadivyaraj04/quantumeye.in/main/content/content.json
+```
 
-1. Press "Publish the current content" in the dashboard. That commits today's
-   copy as the first `content/content.json`; the site does not change.
-2. Set `VITE_CONTENT_URL` to the raw URL of that file and redeploy once. From
-   then on, edits go live without a deploy.
-3. Editors for each section, media upload, and draft/publish.
+in the build environment and deploy once. After that deploy, publishing from
+the dashboard changes the live site on its own.
+
+Note on caching: raw.githubusercontent.com sends `Cache-Control: max-age=300`,
+so a publish can take up to five minutes to appear. If that ever matters, the
+same file is on jsDelivr (`cdn.jsdelivr.net/gh/jadejadivyaraj04/quantumeye.in@main/content/content.json`)
+- one line in `src/lib/content.tsx`.
+
+**Not built yet:** uploading captures from the dashboard. Images are still
+processed and committed by hand into `public/work/`.
 
 ## 1. Blocking — do these first
 
