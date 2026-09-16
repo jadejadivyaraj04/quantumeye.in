@@ -42,20 +42,29 @@ export default function Header() {
 
       <header
         className={`drop-in fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-          scrolled
-            ? "border-b border-rule bg-ground/85 backdrop-blur-xl"
-            : "border-b border-transparent"
+          condensed
+            ? "border-b border-transparent"
+            : scrolled
+              ? "border-b border-rule bg-ground/85 backdrop-blur-xl"
+              : "border-b border-transparent"
         }`}
       >
+        {/* One element in two shapes. Everything that changes between them -
+            colour, radius, padding, shadow - is a CSS property that animates,
+            so the change is a movement rather than a swap. */}
         <nav
           aria-label="Primary"
-          className={`shell flex items-center justify-between transition-[padding] duration-[420ms] ease-out ${
-            condensed ? "py-1.5" : "py-3.5"
+          className={`flex items-center transition-all duration-[420ms] ease-out ${
+            condensed
+              ? "mx-auto mt-2.5 w-fit max-w-[calc(100%-1.5rem)] justify-start gap-1 rounded-full bg-ink px-2 py-2 text-ground shadow-lift"
+              : "shell justify-between rounded-none bg-transparent py-3.5"
           }`}
         >
           <a
             href="#top"
-            className="group flex h-11 items-center gap-2.5 text-ink"
+            className={`group flex h-11 items-center gap-2.5 transition-colors duration-300 ${
+              condensed ? "pl-1.5 text-ground" : "text-ink"
+            }`}
             aria-label="Back to top"
           >
             <span
@@ -63,30 +72,34 @@ export default function Header() {
                 condensed ? "scale-[0.84]" : "scale-100"
               }`}
             >
-              <Logo />
+              <Logo onDark={condensed} />
             </span>
 
-            {/* Name and place, stacked in one cell and crossfaded: the name
-                is who you are, the section is where you are, and only one of
-                them is worth the space at a time. */}
+            {/* Name and place, stacked in one cell and crossfaded. The place
+                only replaces the name below md, where the nav is behind a
+                menu button and nothing else says where you are; beside a
+                visible nav it would only repeat the highlighted item. */}
             <span className="grid">
               <span
                 className={`col-start-1 row-start-1 font-display text-[0.94rem] font-semibold tracking-tight whitespace-nowrap transition-all duration-300 ease-out ${
-                  condensed
-                    ? "-translate-y-1.5 opacity-0"
-                    : "translate-y-0 opacity-100"
+                  condensed ? "max-md:-translate-y-1.5 max-md:opacity-0" : ""
                 }`}
-                aria-hidden={condensed}
               >
                 {identity.firstName}
-                <span className="hidden text-ink-soft sm:inline">
+                <span
+                  className={`hidden sm:inline ${
+                    condensed ? "text-ground/60" : "text-ink-soft"
+                  }`}
+                >
                   {" "}
                   {identity.lastName}
                 </span>
               </span>
 
               <span
-                className={`label-mono col-start-1 row-start-1 self-center whitespace-nowrap text-ink-soft transition-all duration-300 ease-out ${
+                className={`label-mono col-start-1 row-start-1 self-center whitespace-nowrap transition-all duration-300 ease-out md:hidden ${
+                  condensed ? "text-ground/70" : "text-ink-soft"
+                } ${
                   condensed
                     ? "translate-y-0 opacity-100"
                     : "translate-y-1.5 opacity-0"
@@ -99,51 +112,71 @@ export default function Header() {
           </a>
 
           {/* Desktop nav */}
-          <ul className="hidden items-center gap-1 md:flex">
-            {sections.map((s) => {
+          <ul className={`hidden items-center gap-1 md:flex ${condensed ? "px-1" : ""}`}>
+            {sections
+              .filter((s) => s.id !== "contact")
+              .map((s) => {
               const on = active === s.id;
               return (
                 <li key={s.id}>
                   <a
                     href={`#${s.id}`}
                     aria-current={on ? "true" : undefined}
-                    className={`relative flex items-center px-3.5 text-[0.86rem] transition-all duration-300 ${
-                      condensed ? "h-9" : "h-11"
-                    } ${
-                      on ? "text-ink" : "text-ink-soft hover:text-ink"
+                    className={`relative flex items-center transition-all duration-300 ${
+                      condensed
+                        ? `label-mono h-9 px-3 ${on ? "text-ground" : "text-ground/60 hover:text-ground"}`
+                        : `h-11 px-3.5 text-[0.86rem] ${on ? "text-ink" : "text-ink-soft hover:text-ink"}`
                     }`}
                   >
                     {s.label}
                     {on && (
                       <motion.span
                         layoutId="nav-active"
-                        className="absolute inset-x-2.5 bottom-1.5 h-[2px] rounded-full bg-accent"
+                        className={`absolute inset-x-2.5 bottom-1.5 h-[2px] rounded-full ${
+                          condensed ? "bg-ground/70" : "bg-accent"
+                        }`}
                         transition={{ type: "spring", stiffness: 380, damping: 32 }}
                       />
                     )}
                   </a>
-                </li>
-              );
-            })}
+                  </li>
+                );
+              })}
           </ul>
 
           <div className="flex items-center gap-1.5">
+            <a
+              href="#contact"
+              className={`hidden h-9 items-center rounded-full px-4 transition-all duration-300 sm:flex ${
+                condensed
+                  ? "label-mono bg-accent text-ground hover:bg-accent-text"
+                  : "label-mono border border-rule-strong text-ink hover:border-ink"
+              }`}
+            >
+              Contact
+            </a>
 
             <button
               type="button"
               onClick={() => setOpen((o) => !o)}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-ink-soft transition-colors hover:bg-surface hover:text-ink md:hidden"
+              className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors md:hidden ${
+                condensed
+                  ? "text-ground hover:bg-ground/15"
+                  : "text-ink-soft hover:bg-surface hover:text-ink"
+              }`}
             >
               {open ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </nav>
 
-        {/* Scroll progress — reads position without adding a widget. */}
+        {/* Scroll progress. Pinned to the viewport edge rather than the
+            header's underside, because the header stops being a full-width
+            bar the moment it becomes a pill. */}
         <motion.div
-          className="h-[2px] origin-left bg-accent"
+          className="fixed inset-x-0 top-0 h-[2px] origin-left bg-accent"
           style={{ scaleX: progress }}
           aria-hidden="true"
         />

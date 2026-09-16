@@ -38,7 +38,18 @@ const blades = ANGLES.map((a) => {
   return { x1, y1, x2, y2 };
 });
 
-export default function Logo({ className = "h-7 w-7" }: { className?: string }) {
+export default function Logo({
+  className = "h-7 w-7",
+  onDark = false,
+}: {
+  className?: string;
+  /** Inside the condensed pill the ground is near-black, where oxblood on
+   *  near-black is barely a mark at all. */
+  onDark?: boolean;
+}) {
+  const blade = onDark ? "var(--color-ground)" : "var(--color-accent)";
+  const iris = onDark ? "var(--color-ground)" : "var(--color-accent)";
+
   return (
     <svg
       viewBox="0 0 24 24"
@@ -52,7 +63,7 @@ export default function Logo({ className = "h-7 w-7" }: { className?: string }) 
         r={RING}
         fill="none"
         stroke="currentColor"
-        strokeOpacity={0.18}
+        strokeOpacity={onDark ? 0.3 : 0.18}
         strokeWidth={1}
       />
 
@@ -69,8 +80,8 @@ export default function Logo({ className = "h-7 w-7" }: { className?: string }) 
             y1={b.y1}
             x2={b.x2}
             y2={b.y2}
-            stroke="var(--color-accent)"
-            strokeOpacity={0.62}
+            stroke={blade}
+            strokeOpacity={onDark ? 0.5 : 0.62}
             strokeWidth={1.4}
             strokeLinecap="round"
           />
@@ -79,7 +90,7 @@ export default function Logo({ className = "h-7 w-7" }: { className?: string }) 
 
       <polygon
         points={opening}
-        fill="var(--color-accent)"
+        fill={iris}
         className="origin-center transition-transform duration-500 ease-out group-hover:scale-[0.72] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
         style={{ transformBox: "fill-box", transformOrigin: "center" }}
       />

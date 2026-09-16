@@ -107,6 +107,16 @@ outliving old files (`CONTENT_SHAPE`).
 With `VITE_CONTENT_URL` unset there is no request and no Firebase code
 anywhere in the bundle - the cost of the whole pipeline is 0.4KB gzip.
 
+**The header is one element in two shapes.** At the top it is a plain bar on
+the page ground. Past the hero it becomes a floating pill - dark, centred,
+rounded, with the nav in mono caps and an accent Contact button - and
+returning to the top restores the bar. `useCondensed` has two thresholds
+because a single one flickers when a scroll ends on it, and every property
+that changes between the shapes (colour, radius, padding, shadow, opacity) is
+CSS rather than a JS animation, for the reason written above the keyframes
+block: a renderer that throttles rAF freezes JS animations, and it froze this
+header off-screen while the pill was being built.
+
 **Vertical rhythm is one class too.** `.band` in `index.css` sets the padding
 above and below every section from a single `--band` custom property
 (3.25rem → 4.5rem → 5rem). It replaced `py-24 sm:py-32` repeated in eight
