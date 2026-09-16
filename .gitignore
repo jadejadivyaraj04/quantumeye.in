@@ -1,0 +1,18 @@
+# Dependencies and build output
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Local environment: EmailJS ids, content URL, and later the dashboard token.
+# .env.example is committed; nothing with a real value ever is.
+.env
+.env.*
+!.env.example
+
+# macOS / editors
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log

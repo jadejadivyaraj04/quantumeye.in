@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────── design tokens ── */
+/*
+ * Light only.
+ *
+ * The palette is sampled from the portrait rather than picked in the
+ * abstract: the accent is the oxblood of the shirt (#3D1020–#752F3F), the
+ * ink comes from the hair (#3E3435), and --c-studio is the average of the
+ * photograph's own backdrop, so the panel it sits in matches the paper
+ * behind his shoulder instead of fighting it.
+ */
+
+:root {
+  --c-ground: #faf9f7;
+  --c-surface: #f2f0ec;
+  --c-surface-deep: #e9e6e1;
+  --c-studio: #d8d5d0;
+
+  --c-ink: #191415;
+  --c-ink-soft: #5c5457;
+  --c-ink-faint: #8d8588;
+
+  --c-rule: #e3e0db;
+  --c-rule-strong: #c7c3bd;
+
+  --c-accent: #7b2434;
+  --c-accent-text: #6b1e2c;
+  --c-accent-soft: #f3e6e8;
+
+  --c-ok: #2f6b4f;
+  --c-ok-soft: #e3ede7;
+
+  --shadow-card: 0 1px 2px rgb(25 20 21 / 0.04), 0 10px 28px -14px rgb(25 20 21 / 0.13);
+  --shadow-lift: 0 2px 4px rgb(25 20 21 / 0.05), 0 26px 54px -22px rgb(25 20 21 / 0.24);
+  --shadow-device: 0 4px 14px rgb(25 20 21 / 0.12), 0 34px 68px -26px rgb(25 20 21 / 0.4);
+  --shadow-plate: 0 1px 3px rgb(25 20 21 / 0.06), 0 30px 60px -30px rgb(25 20 21 / 0.3);
+}
+
+@theme inline {
+  --color-ground: var(--c-ground);
+  --color-surface: var(--c-surface);
+  --color-surface-deep: var(--c-surface-deep);
+  --color-studio: var(--c-studio);
+
+  --color-ink: var(--c-ink);
+  --color-ink-soft: var(--c-ink-soft);
+  --color-ink-faint: var(--c-ink-faint);
+
+  --color-rule: var(--c-rule);
+  --color-rule-strong: var(--c-rule-strong);
+
+  --color-accent: var(--c-accent);
+  --color-accent-text: var(--c-accent-text);
+  --color-accent-soft: var(--c-accent-soft);
+
+  --color-ok: var(--c-ok);
+  --color-ok-soft: var(--c-ok-soft);
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-device: var(--shadow-device);
+  --shadow-plate: var(--shadow-plate);
+}
+
+/* ────────────────────────────────────────────────────────── base ──── */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+    color-scheme: light;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  p { text-wrap: pretty; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-ground);
+  }
+
+  img { max-width: 100%; height: auto; }
+  a, button { touch-action: manipulation; }
+}
+
+/* ───────────────────────────────────────────────────── utilities ──── */
+
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * The portrait's own backdrop is a soft vertical gradient, brighter at the
+ * top right and falling to a deeper warm grey at the bottom left. Matching
+ * that gradient on the plate behind it means the photograph's edges dissolve
+ * into the page instead of reading as a pasted rectangle.
+ */
+@utility studio-plate {
+  background-image: linear-gradient(
+    168deg,
+    #e9e6e5 0%,
+    #d8d5d0 46%,
+    #c4bab5 100%
+  );
+}
+
+/*
+ * One page shell, so the measure and gutters are defined once instead of
+ * being repeated as `mx-auto max-w-6xl px-5 sm:px-8` in ten components.
+ * Wider than the 6xl (72rem) it replaces: at 1280px that was leaving 96px
+ * of dead margin on each side.
+ */
+@layer components {
+  .shell {
+    margin-inline: auto;
+    max-width: 88rem;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 480px) {
+    .shell { padding-inline: 1.75rem; }
+  }
+
+  @media (min-width: 1024px) {
+    .shell { padding-inline: 2.5rem; }
+  }
+}
+
+/* ──────────────────────────────────────────────────── keyframes ──── */
+
+/*
+ * Entrance animations are CSS, not JS.
+ *
+ * Framer Motion drives opacity through requestAnimationFrame. Any renderer
+ * that throttles or virtualises rAF — a backgrounded tab, a headless
+ * screenshot, a link-preview crawler — freezes those fades part-way and can
+ * leave content stranded invisible. CSS animations are driven by the
+ * document timeline instead, so the browser guarantees the final frame.
+ * Transform-only motion stays on Framer, where the failure mode is simply
+ * "no movement".
+ */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes mask-up {
+  from { transform: translateY(110%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.rise    { animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.mask-up { animation: mask-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.fade    { animation: fade-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes soft-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 2.6s ease-in-out infinite;
+}
+
+/* ────────────────────────────────────────────── reduced motion ──── */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--color-ground); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-rule-strong);
+    border: 3px solid var(--color-ground);
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-ink-faint); }
+}

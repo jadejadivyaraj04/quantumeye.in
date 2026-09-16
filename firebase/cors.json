@@ -1,0 +1,12 @@
+[
+  {
+    "origin": [
+      "https://quantumeye.in",
+      "https://www.quantumeye.in",
+      "http://localhost:5180"
+    ],
+    "method": ["GET", "HEAD"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]

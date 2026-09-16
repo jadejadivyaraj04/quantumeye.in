@@ -1,0 +1,19 @@
+rules_version = '2';
+
+// The public site never reads Firestore. It reads one published JSON file from
+// Storage, so this database is a private editing store and nothing else.
+//
+// The previous build did the opposite - it read a database straight from every
+// visitor's browser with a public key - and that is how a home address became
+// world-readable. Keep this closed.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == ADMIN_UID;
+    }
+
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

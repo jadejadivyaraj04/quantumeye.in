@@ -1,0 +1,131 @@
+<!doctype html>
+<!--
+  Source for public/og-image.png (1200×630). Regenerate with: npm run og
+  Palette matches the site, which is sampled from the portrait itself.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Newsreader:opsz,wght@6..72,400&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        background: #faf9f7;
+        font-family: "Bricolage Grotesque", sans-serif;
+        color: #191415;
+        display: grid;
+        grid-template-columns: 1fr 424px;
+        overflow: hidden;
+      }
+
+      .col {
+        padding: 66px 0 62px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .mark { display: flex; align-items: center; gap: 13px; }
+      .badge {
+        width: 42px; height: 42px;
+        border-radius: 11px;
+        background: #191415;
+        color: #faf9f7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px; font-weight: 700; letter-spacing: -0.5px;
+      }
+      .role {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px; font-weight: 500;
+        letter-spacing: 0.13em; text-transform: uppercase;
+        color: #6b1e2c;
+      }
+
+      h1 {
+        font-size: 92px; font-weight: 700;
+        line-height: 0.93; letter-spacing: -0.045em;
+      }
+
+      .rule {
+        display: flex; align-items: center; gap: 14px;
+        margin: 22px 0 16px;
+      }
+      .rule i { width: 38px; height: 2px; background: #7b2434; }
+      .rule span {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px; font-weight: 500;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        color: #5c5457;
+      }
+
+      .pitch {
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 25px; line-height: 1.44;
+        color: #5c5457; max-width: 30ch;
+      }
+
+      .clients {
+        display: flex; align-items: baseline; gap: 26px;
+        padding-top: 22px; border-top: 1px solid #e3e0db;
+      }
+      .clients .lab {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px; font-weight: 500;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        color: #8d8588;
+      }
+      .clients b {
+        font-size: 20px; font-weight: 600;
+        letter-spacing: -0.01em; color: #191415;
+      }
+
+      /* Same gradient as the site's .studio-plate, matching the photo's
+         own backdrop so the crop does not read as a cut-out. */
+      .plate {
+        position: relative;
+        background-image: linear-gradient(168deg, #e9e6e5 0%, #d8d5d0 46%, #c4bab5 100%);
+      }
+      .plate img {
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: 50% 11%;
+        display: block;
+      }
+      .plate::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(90deg, #faf9f7 0%, rgba(250, 249, 247, 0) 14%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="col">
+      <div class="mark">
+        <span class="badge">DJ</span>
+        <span class="role">Senior Flutter Engineer</span>
+      </div>
+
+      <div>
+        <h1>Divyarajsinh<br />Jadeja</h1>
+        <div class="rule"><i></i><span>Ahmedabad, India</span></div>
+        <p class="pitch">Cross-platform mobile apps for teams that ship at scale.</p>
+      </div>
+
+      <div class="clients">
+        <span class="lab">Shipped for</span>
+        <b>Nike</b>
+        <b>BBC Earth</b>
+        <b>Heracles Almelo</b>
+      </div>
+    </div>
+
+    <div class="plate">
+      <img src="../public/portrait.jpg" alt="Divyarajsinh Jadeja" />
+    </div>
+  </body>
+</html>

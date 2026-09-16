@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// Two public things: the published content file the site fetches, and the
+// screenshots it references. Everything else is admin-only, and nothing
+// anywhere is publicly writable.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == ADMIN_UID;
+    }
+
+    // What the live site reads.
+    match /content.json {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Uploaded captures. Images only, and capped so a mistaken upload cannot
+    // put a 40MB original on the critical path.
+    match /work/{file} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 3 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // Publish history, for rolling back. Admin eyes only.
+    match /backups/{file} {
+      allow read, write: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
