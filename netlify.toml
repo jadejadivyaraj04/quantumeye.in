@@ -1,0 +1,31 @@
+# Deploy settings, in the repo rather than in a dashboard - so the build is
+# reproducible and a new host (or a rebuilt site) cannot silently differ.
+#
+# The four VITE_* variables are NOT here: Vite inlines them at build time, and
+# anything in this file is public. They go in Netlify's environment variables.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Hashed filenames, so a year is safe.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Never cache the entry point, or a deploy stays invisible until caches expire.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
