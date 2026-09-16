@@ -60,7 +60,7 @@ export default function Header() {
           aria-label="Primary"
           className={`mx-auto flex w-full items-center justify-between transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
             condensed
-              ? "mt-2.5 max-w-[calc(100%-1.5rem)] gap-1 rounded-full bg-ink px-2.5 py-2 text-ground shadow-lift md:max-w-[49rem]"
+              ? "mt-2.5 max-w-[calc(100%-1.5rem)] gap-1 rounded-full bg-ink px-2.5 py-2 text-ground shadow-lift md:max-w-[55rem]"
               : "mt-0 max-w-[88rem] rounded-none bg-transparent px-5 py-3.5 shadow-none sm:px-7 lg:px-10"
           }`}
         >
