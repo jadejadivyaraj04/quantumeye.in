@@ -710,14 +710,14 @@ export const explorations: Exploration[] = [
   },
   {
     slug: "storefront-mcp",
-    title: "Storefront MCP",
+    title: "Silhouette MCP",
     status: "R&D prototype",
     summary:
-      "A shop's catalogue exposed to ChatGPT as an MCP server, answering in product cards rendered inside the conversation rather than in paragraphs.",
+      "Silhouette America's catalogue exposed to ChatGPT as an MCP server, answering in product cards rendered inside the conversation rather than in paragraphs.",
     question:
       "Can a storefront live inside ChatGPT - searchable, browsable, and still sending the customer back to the shop to buy?",
     built: [
-      "Two MCP tools over the store's Magento REST API: product search and product detail",
+      "Two MCP tools over Silhouette America's Magento REST API: product search and product detail",
       "A product card widget registered as an MCP UI resource and rendered in the chat",
       "Image, price, stock and SKU on each card, with a button through to the product page",
       "Zod-typed tool schemas, so the model cannot call them with junk",

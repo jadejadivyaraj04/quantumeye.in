@@ -1,6 +1,6 @@
 {
   "shape": 1,
-  "publishedAt": "2026-09-16T08:39:34.921Z",
+  "publishedAt": "2026-09-16T09:00:39.353177Z",
   "content": {
     "identity": {
       "name": "Divyarajsinh Jadeja",
@@ -9,7 +9,7 @@
       "role": "Senior Flutter Engineer",
       "positioning": "I build cross-platform mobile apps for teams that ship at scale - Nike, BBC Earth and Heracles Almelo among them.",
       "location": "Ahmedabad, India",
-      "timezone": "IST · UTC+5:30",
+      "timezone": "IST \u00b7 UTC+5:30",
       "availableNote": "Open to senior mobile roles and scoped consulting",
       "portraitUrl": "/portrait.jpg",
       "resumeUrl": null,
@@ -465,7 +465,7 @@
       },
       {
         "company": "Aimperior Technologies",
-        "position": "Android → Flutter Developer",
+        "position": "Android \u2192 Flutter Developer",
         "location": "Ahmedabad",
         "start": "2019-03",
         "end": "2022-03",
@@ -583,12 +583,12 @@
       },
       {
         "slug": "storefront-mcp",
-        "title": "Storefront MCP",
+        "title": "Silhouette MCP",
         "status": "R&D prototype",
-        "summary": "A shop's catalogue exposed to ChatGPT as an MCP server, answering in product cards rendered inside the conversation rather than in paragraphs.",
+        "summary": "Silhouette America's catalogue exposed to ChatGPT as an MCP server, answering in product cards rendered inside the conversation rather than in paragraphs.",
         "question": "Can a storefront live inside ChatGPT - searchable, browsable, and still sending the customer back to the shop to buy?",
         "built": [
-          "Two MCP tools over the store's Magento REST API: product search and product detail",
+          "Two MCP tools over Silhouette America's Magento REST API: product search and product detail",
           "A product card widget registered as an MCP UI resource and rendered in the chat",
           "Image, price, stock and SKU on each card, with a button through to the product page",
           "Zod-typed tool schemas, so the model cannot call them with junk",
@@ -754,7 +754,7 @@
           {
             "name": "Firebase",
             "years": 3,
-            "note": "Auth · Firestore · RTDB · FCM"
+            "note": "Auth \u00b7 Firestore \u00b7 RTDB \u00b7 FCM"
           },
           {
             "name": "REST APIs",
@@ -766,7 +766,7 @@
           },
           {
             "name": "Supabase",
-            "note": "Postgres · row-level security"
+            "note": "Postgres \u00b7 row-level security"
           },
           {
             "name": "Postman"
@@ -791,7 +791,7 @@
           },
           {
             "name": "In-app purchase",
-            "note": "Play Billing · StoreKit"
+            "note": "Play Billing \u00b7 StoreKit"
           }
         ]
       },
@@ -836,7 +836,7 @@
           },
           {
             "name": "Microsoft Clarity",
-            "note": "Session replay · heatmaps"
+            "note": "Session replay \u00b7 heatmaps"
           },
           {
             "name": "Git & CI",

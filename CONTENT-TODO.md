@@ -157,12 +157,11 @@ empty - a capture with Sightengine or Hive keys set would show the estimate
 beside the credential, which is the product's whole point. Worth redoing when
 keys are to hand.
 
-Storefront MCP has no captures at all. Its widget renders inside ChatGPT, so
+Silhouette MCP has no captures at all. Its widget renders inside ChatGPT, so
 the only honest capture is a screenshot of that conversation - which has to
-come from you. Two open questions on it: whether the client can be named (the
-code points at a Silhouette America staging host, so the card says "a shop"),
-and whether it is live in the ChatGPT directory, which would make it
-Published rather than an R&D prototype.
+come from you. The client is named with permission (Sep 2026) and it is not
+live in the ChatGPT directory, so the chip stays at R&D prototype; change it
+to Published if that ever changes.
 
 ### The four without captures
 
