@@ -1,20 +1,20 @@
 {
   "shape": 1,
-  "publishedAt": "2026-09-16T09:07:13.077438Z",
+  "publishedAt": "2026-09-16T09:28:53.127259Z",
   "content": {
     "identity": {
       "name": "Divyarajsinh Jadeja",
       "firstName": "Divyarajsinh",
       "lastName": "Jadeja",
       "role": "Senior Flutter Engineer",
-      "positioning": "I build cross-platform mobile apps for teams that ship at scale - Nike, BBC Earth and Heracles Almelo among them.",
+      "positioning": "I build cross-platform mobile apps for teams that ship at scale - Nike, BBC Earth and Heracles Almelo among them - and lately, apps that run a language model on the phone rather than behind an API.",
       "location": "Ahmedabad, India",
       "timezone": "IST \u00b7 UTC+5:30",
       "availableNote": "Open to senior mobile roles and scoped consulting",
       "portraitUrl": "/portrait.jpg",
       "resumeUrl": null,
       "currently": {
-        "note": "Working on Flutter release engineering - out-of-band updates with Shorebird, and pinning toolchains across a multi-app team.",
+        "note": "Putting small models on the phone instead of behind an API: prescriptions read into a dose schedule offline, receipts and statements parsed on device, and a storefront that answers inside ChatGPT over MCP.",
         "since": "September 2026"
       }
     },

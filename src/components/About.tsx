@@ -57,6 +57,15 @@ export default function About() {
                 is unglamorous and it is the difference between shipping
                 weekly and shipping when the store lets you.
               </p>
+              <p>
+                The newer thread is on-device AI, and not a chatbot bolted onto
+                a screen. A Gemma model that turns a photographed prescription
+                into a dose schedule with no account and no server. A ledger
+                that refuses any amount the model cannot point to in the OCR
+                text it came from. A storefront answering inside ChatGPT
+                through an MCP server. The interesting part is never the model
+                - it is what you are still willing to promise once it is wrong.
+              </p>
             </div>
 
             <motion.div

@@ -272,6 +272,31 @@ Two items from the teardown that live in Supabase, not in this repo:
 
 ---
 
+## 5. Add these to the résumé
+
+The site and the CV now disagree: the site describes on-device AI work, the PDF
+has none. Add a **Selected R&D** section with these, then re-export and drop it
+in `public/` so `identity.resumeUrl` can point at it.
+
+- Built on-device LLM features in Flutter: a medication assistant that reads
+  prescriptions and answers questions fully offline, using a Gemma model
+  downloaded to the device.
+- Built an expense tracker ingesting receipts, PDF statements and bank SMS,
+  with ML Kit OCR cross-checking every extracted amount so a hallucinated
+  figure never reaches the ledger.
+- Published an MCP server exposing a Magento catalogue to ChatGPT, including
+  the product-card UI rendered inside the conversation (Node, MCP SDK,
+  ChatGPT Apps SDK).
+- Built an AI-media authenticity checker (FastAPI, Next.js) reporting C2PA
+  provenance and probabilistic detection separately rather than merging them
+  into one misleading score.
+
+Skills block: **AI & ML** - on-device inference (Gemma, MediaPipe LiteRT),
+ML Kit OCR, MCP, ChatGPT Apps SDK, C2PA.
+
+Worth a line too: the two AI articles, May 2025 and Dec 2024, which pre-date
+most of the hype.
+
 ## 5. Fix these on the résumé itself
 
 The site and `Divyaraj 2026.pdf` now agree on facts, but the PDF has its own
