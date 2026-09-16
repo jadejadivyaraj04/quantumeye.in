@@ -1,6 +1,28 @@
-import { useState } from "react";
-import { ChevronDown, ChevronUp, Plus, Trash2, X } from "lucide-react";
+import { createContext, useContext, useRef, useState } from "react";
+import { ChevronDown, ChevronUp, Plus, Trash2, Upload, X } from "lucide-react";
 import type { Field, SectionSpec } from "./schema";
+import type { Uploaded } from "./upload";
+
+/**
+ * Uploading needs the token and the record being edited, neither of which the
+ * field components should know about - so the one function that does lives in
+ * context, supplied by the dashboard.
+ */
+export interface UploadContext {
+  upload: (file: File, hint: string, wide: boolean) => Promise<Uploaded>;
+}
+
+const Uploads = createContext<UploadContext | null>(null);
+
+export function UploadProvider({
+  value,
+  children,
+}: {
+  value: UploadContext;
+  children: React.ReactNode;
+}) {
+  return <Uploads.Provider value={value}>{children}</Uploads.Provider>;
+}
 
 /**
  * Every form in the dashboard, generated from the section specs.
@@ -27,10 +49,16 @@ function FieldInput({
   field,
   value,
   onChange,
+  hint = "capture",
+  wide = false,
 }: {
   field: Field;
   value: unknown;
   onChange: (next: unknown) => void;
+  /** Names uploaded files after the record they belong to. */
+  hint?: string;
+  /** Browser captures keep more width than phone screens. */
+  wide?: boolean;
 }) {
   switch (field.kind) {
     case "text":
@@ -113,7 +141,14 @@ function FieldInput({
       );
 
     case "media":
-      return <MediaField value={(value as Shot[]) ?? []} onChange={onChange} />;
+      return (
+        <MediaField
+          value={(value as Shot[]) ?? []}
+          onChange={onChange}
+          hint={hint}
+          wide={wide}
+        />
+      );
 
     case "links":
       return <LinksField value={(value as Rec) ?? {}} onChange={onChange} />;
@@ -131,10 +166,20 @@ interface Shot {
 function MediaField({
   value,
   onChange,
+  hint,
+  wide,
 }: {
   value: Shot[];
   onChange: (next: Shot[]) => void;
+  hint: string;
+  wide: boolean;
 }) {
+  const uploads = useContext(Uploads);
+  const picker = useRef<HTMLInputElement>(null);
+  const [working, setWorking] = useState<string | null>(null);
+  const [failed, setFailed] = useState<string | null>(null);
+  const [saved, setSaved] = useState<string | null>(null);
+
   const set = (i: number, patch: Partial<Shot>) =>
     onChange(value.map((s, j) => (i === j ? { ...s, ...patch } : s)));
 
@@ -144,6 +189,38 @@ function MediaField({
     if (target < 0 || target >= next.length) return;
     [next[i], next[target]] = [next[target], next[i]];
     onChange(next);
+  };
+
+  const pick = async (files: FileList | null) => {
+    if (!files?.length || !uploads) return;
+    setFailed(null);
+    setSaved(null);
+
+    const added: Shot[] = [];
+    let savedBytes = 0;
+
+    for (const file of Array.from(files)) {
+      setWorking(file.name);
+      try {
+        const result = await uploads.upload(file, hint, wide);
+        savedBytes += result.originalBytes - result.bytes;
+        // Alt text is left empty on purpose: publishing refuses a capture
+        // without it, which is the only reliable moment to ask for one.
+        added.push({ src: result.url, alt: "" });
+      } catch (err) {
+        setFailed((err as Error).message);
+        break;
+      }
+    }
+
+    setWorking(null);
+    if (added.length) {
+      onChange([...value, ...added]);
+      setSaved(
+        `${added.length} added, ${(savedBytes / 1024).toFixed(0)}KB smaller than the originals.`,
+      );
+    }
+    if (picker.current) picker.current.value = "";
   };
 
   return (
@@ -166,7 +243,7 @@ function MediaField({
                 onChange={(e) => set(i, { src: e.target.value })}
               />
               <input
-                className={inputCls}
+                className={`${inputCls} ${shot.alt.trim() ? "" : "border-accent/50"}`}
                 placeholder="Alt text — describe what the screen shows"
                 value={shot.alt}
                 onChange={(e) => set(i, { alt: e.target.value })}
@@ -192,17 +269,45 @@ function MediaField({
         </div>
       ))}
 
-      <button
-        type="button"
-        className={ghostBtn}
-        onClick={() => onChange([...value, { src: "", alt: "" }])}
-      >
-        <Plus size={13} strokeWidth={2.4} />
-        Add capture
-      </button>
+      <input
+        ref={picker}
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        onChange={(e) => void pick(e.target.files)}
+      />
+
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => picker.current?.click()}
+          disabled={working !== null}
+          className="label-mono flex h-9 items-center gap-1.5 rounded-full bg-ink px-3.5 text-ground disabled:opacity-50"
+        >
+          <Upload size={13} strokeWidth={2.4} />
+          {working ? `Uploading ${working}…` : "Upload from this Mac"}
+        </button>
+        <button
+          type="button"
+          className={ghostBtn}
+          onClick={() => onChange([...value, { src: "", alt: "" }])}
+        >
+          <Plus size={13} strokeWidth={2.4} />
+          Add by path
+        </button>
+      </div>
+
+      {failed && (
+        <p className="text-[0.82rem] leading-relaxed text-accent-text">{failed}</p>
+      )}
+      {saved && <p className={helpCls}>{saved}</p>}
+
       <p className={helpCls}>
-        The first capture is the one used on the card. Alt text is required
-        before publishing.
+        Pick a screenshot and it is resized to {wide ? "1100" : "600"}px wide,
+        encoded as JPEG and committed straight away. The first capture is the
+        one used on the card, and every capture needs alt text before the
+        content can be published.
       </p>
     </div>
   );
@@ -318,6 +423,11 @@ export function RecordForm({
     onChange(updated);
   };
 
+  // Uploaded files are named after the record, and browser captures keep more
+  // width than phone screens.
+  const hint = String(record.slug ?? record.title ?? "capture");
+  const wide = record.mediaLayout === "wide";
+
   return (
     <div className="space-y-5">
       {fields.map((field) => {
@@ -364,6 +474,8 @@ export function RecordForm({
               field={field}
               value={record[field.key]}
               onChange={(next) => set(field.key, next)}
+              hint={hint}
+              wide={wide}
             />
             {"help" in field && field.help && <p className={helpCls}>{field.help}</p>}
           </div>

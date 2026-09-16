@@ -15,9 +15,10 @@ import {
   type Account,
   type Commit,
 } from "./github";
-import { SectionEditor } from "./Editor";
+import { SectionEditor, UploadProvider } from "./Editor";
 import { SECTIONS, specFor } from "./schema";
 import { clearToken, storeToken, storedToken, verify } from "./session";
+import { uploadCapture, TARGET_WIDTH } from "./upload";
 import { describeChanges, validate, type Problem } from "./validate";
 
 /**
@@ -394,11 +395,22 @@ export default function Admin() {
             </div>
 
             {draft && (
-              <SectionEditor
-                spec={specFor(active)}
-                value={draft[active]}
-                onChange={(next) => edit(active, next)}
-              />
+              <UploadProvider
+                value={{
+                  upload: (file, hint, wide) =>
+                    uploadCapture(token, {
+                      file,
+                      hint,
+                      maxWidth: wide ? TARGET_WIDTH.wide : TARGET_WIDTH.phones,
+                    }),
+                }}
+              >
+                <SectionEditor
+                  spec={specFor(active)}
+                  value={draft[active]}
+                  onChange={(next) => edit(active, next)}
+                />
+              </UploadProvider>
             )}
           </section>
 
