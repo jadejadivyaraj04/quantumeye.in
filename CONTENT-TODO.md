@@ -158,9 +158,12 @@ empty - a capture with Sightengine or Hive keys set would show the estimate
 beside the credential, which is the product's whole point. Worth redoing when
 keys are to hand.
 
-Silhouette MCP has no captures at all. Its widget renders inside ChatGPT, so
-the only honest capture is a screenshot of that conversation - which has to
-come from you. The client is named with permission (Sep 2026) and it is not
+Silhouette MCP is captured (Sep 2026) from a screen recording of the app
+running in ChatGPT developer mode: two frames pulled with ffmpeg, cropped to
+the conversation. The crop is deliberate - the full frame carried the chat
+sidebar, the browser tab strip and the account name, which is more of your
+week than a portfolio needs to publish. Originals in
+`captures-source/silhouette-mcp/`. The client is named with permission (Sep 2026) and it is not
 live in the ChatGPT directory, so the chip stays at R&D prototype; change it
 to Published if that ever changes.
 

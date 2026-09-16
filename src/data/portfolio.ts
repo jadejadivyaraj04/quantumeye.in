@@ -735,7 +735,17 @@ export const explorations: Exploration[] = [
       "Magento 2 REST",
     ],
     hue: 214,
-    media: [],
+    mediaLayout: "wide",
+    media: [
+      {
+        src: "/work/silhouette-widget.jpg",
+        alt: "The product card widget rendered inside a ChatGPT conversation: Silhouette America's catalogue answering a search for Cameo, with stock badges, SKUs and Details buttons",
+      },
+      {
+        src: "/work/silhouette-products.jpg",
+        alt: "Three product cards in the conversation with prices and SKUs, above the model's own answer about which machine to choose",
+      },
+    ],
     links: {},
   },
   {
