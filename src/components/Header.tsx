@@ -41,7 +41,7 @@ export default function Header() {
       </a>
 
       <header
-        className={`drop-in fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
+        className={`drop-in fixed inset-x-0 top-0 z-50 transition-colors duration-[650ms] ${
           condensed
             ? "border-b border-transparent"
             : scrolled
@@ -49,26 +49,30 @@ export default function Header() {
               : "border-b border-transparent"
         }`}
       >
-        {/* One element in two shapes. Everything that changes between them -
-            colour, radius, padding, shadow - is a CSS property that animates,
-            so the change is a movement rather than a swap. */}
+        {/* One element in two shapes, and the change between them has to be
+            watchable rather than a swap - so nothing here is content-sized.
+            A pill that hugs its content needs width:fit-content, which does
+            not interpolate: the bar would jump to pill width and only the
+            colour would animate. Both states run on the same track with an
+            explicit max-width, so width, padding, colour, radius and shadow
+            all travel together. */}
         <nav
           aria-label="Primary"
-          className={`flex items-center transition-all duration-[420ms] ease-out ${
+          className={`mx-auto flex w-full items-center justify-between transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
             condensed
-              ? "mx-auto mt-2.5 w-fit max-w-[calc(100%-1.5rem)] justify-start gap-1 rounded-full bg-ink px-2 py-2 text-ground shadow-lift"
-              : "shell justify-between rounded-none bg-transparent py-3.5"
+              ? "mt-2.5 max-w-[calc(100%-1.5rem)] gap-1 rounded-full bg-ink px-2.5 py-2 text-ground shadow-lift md:max-w-[49rem]"
+              : "mt-0 max-w-[88rem] rounded-none bg-transparent px-5 py-3.5 shadow-none sm:px-7 lg:px-10"
           }`}
         >
           <a
             href="#top"
-            className={`group flex h-11 items-center gap-2.5 transition-colors duration-300 ${
+            className={`group flex h-11 items-center gap-2.5 transition-colors duration-[650ms] ${
               condensed ? "pl-1.5 text-ground" : "text-ink"
             }`}
             aria-label="Back to top"
           >
             <span
-              className={`flex items-center transition-transform duration-[420ms] ease-out ${
+              className={`flex items-center transition-transform duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 condensed ? "scale-[0.84]" : "scale-100"
               }`}
             >
@@ -81,7 +85,7 @@ export default function Header() {
                 visible nav it would only repeat the highlighted item. */}
             <span className="grid">
               <span
-                className={`col-start-1 row-start-1 font-display text-[0.94rem] font-semibold tracking-tight whitespace-nowrap transition-all duration-300 ease-out ${
+                className={`col-start-1 row-start-1 font-display text-[0.94rem] font-semibold tracking-tight whitespace-nowrap transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   condensed ? "max-md:-translate-y-1.5 max-md:opacity-0" : ""
                 }`}
               >
@@ -97,7 +101,7 @@ export default function Header() {
               </span>
 
               <span
-                className={`label-mono col-start-1 row-start-1 self-center whitespace-nowrap transition-all duration-300 ease-out md:hidden ${
+                className={`label-mono col-start-1 row-start-1 self-center whitespace-nowrap transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden ${
                   condensed ? "text-ground/70" : "text-ink-soft"
                 } ${
                   condensed
@@ -122,7 +126,7 @@ export default function Header() {
                   <a
                     href={`#${s.id}`}
                     aria-current={on ? "true" : undefined}
-                    className={`relative flex items-center transition-all duration-300 ${
+                    className={`relative flex items-center transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       condensed
                         ? `label-mono h-9 px-3 ${on ? "text-ground" : "text-ground/60 hover:text-ground"}`
                         : `h-11 px-3.5 text-[0.86rem] ${on ? "text-ink" : "text-ink-soft hover:text-ink"}`
@@ -147,7 +151,7 @@ export default function Header() {
           <div className="flex items-center gap-1.5">
             <a
               href="#contact"
-              className={`hidden h-9 items-center rounded-full px-4 transition-all duration-300 sm:flex ${
+              className={`hidden h-9 items-center rounded-full px-4 transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:flex ${
                 condensed
                   ? "label-mono bg-accent text-ground hover:bg-accent-text"
                   : "label-mono border border-rule-strong text-ink hover:border-ink"
