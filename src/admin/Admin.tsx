@@ -15,41 +15,64 @@ import {
   type Account,
   type Commit,
 } from "./github";
+import { SectionEditor } from "./Editor";
+import { SECTIONS, specFor } from "./schema";
 import { clearToken, storeToken, storedToken, verify } from "./session";
+import { describeChanges, validate, type Problem } from "./validate";
 
 /**
  * The dashboard.
  *
  * Loaded only when the URL asks for it, so none of this - nor the GitHub
  * client - reaches a visitor's bundle. The repository is the database: content
- * is one JSON file, every save is a commit, and the live site reads the file
- * from GitHub's CDN without a rebuild.
+ * is one JSON file, every publish is a commit, and the live site reads the
+ * file from GitHub's CDN without a rebuild.
+ *
+ * Edits are a draft until published. The draft is kept in this browser, so
+ * closing the tab mid-sentence loses nothing, and nothing half-written
+ * reaches the site.
  */
 
 type Phase = "checking" | "signed-out" | "ready";
 
+const DRAFT_KEY = "quantumeye.admin.draft";
+
 interface Loaded {
-  content: PortfolioContent;
+  /** What is live: the published file, or the bundled copy if none exists. */
+  published: PortfolioContent;
   /** Blob sha of content.json, or null when the file does not exist yet. */
   sha: string | null;
   source: "repo" | "bundled";
 }
 
-const SECTIONS: { key: keyof PortfolioContent; label: string }[] = [
-  { key: "identity", label: "Identity" },
-  { key: "contact", label: "Contact" },
-  { key: "caseStudies", label: "Work" },
-  { key: "explorations", label: "Lab" },
-  { key: "roles", label: "Experience" },
-  { key: "capabilities", label: "Capabilities" },
-  { key: "articles", label: "Writing" },
-  { key: "credentials", label: "Education" },
-  { key: "clientMarks", label: "Client marks" },
-];
+function readDraft(sha: string | null): PortfolioContent | null {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw) as { sha: string | null; content: unknown };
+    // A draft built on an older published file would silently undo whatever
+    // came after it, so it is dropped rather than merged.
+    if (saved.sha !== sha) return null;
+    return isPortfolioContent(saved.content) ? saved.content : null;
+  } catch {
+    return null;
+  }
+}
 
-function count(content: PortfolioContent, key: keyof PortfolioContent): string {
-  const value = content[key];
-  return Array.isArray(value) ? String(value.length) : "1";
+function saveDraft(sha: string | null, content: PortfolioContent) {
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ sha, content }));
+  } catch {
+    /* a full or blocked store just means no crash recovery */
+  }
+}
+
+function dropDraft() {
+  try {
+    localStorage.removeItem(DRAFT_KEY);
+  } catch {
+    /* nothing to do */
+  }
 }
 
 export default function Admin() {
@@ -59,7 +82,11 @@ export default function Admin() {
   const [problem, setProblem] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [loaded, setLoaded] = useState<Loaded | null>(null);
+  const [draft, setDraft] = useState<PortfolioContent | null>(null);
   const [commits, setCommits] = useState<Commit[]>([]);
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const [note, setNote] = useState("");
+  const [restored, setRestored] = useState(false);
   const [active, setActive] = useState<keyof PortfolioContent>("caseStudies");
 
   /* Keep the dashboard out of search results even if the URL leaks. */
@@ -75,10 +102,11 @@ export default function Admin() {
   const load = useCallback(async (authToken: string) => {
     const file = await readFile(authToken, REPO.contentPath);
 
+    let next: Loaded;
     if (!file) {
       // Nothing published yet: work from the copy compiled into the site, and
       // offer to commit it as the first version.
-      setLoaded({ content: bundledContent, sha: null, source: "bundled" });
+      next = { published: bundledContent, sha: null, source: "bundled" };
     } else {
       const parsed: unknown = JSON.parse(file.text);
       const content = (parsed as { content?: unknown }).content;
@@ -87,9 +115,13 @@ export default function Admin() {
           `${REPO.contentPath} is not valid content. Fix or delete it in the repository.`,
         );
       }
-      setLoaded({ content, sha: file.sha, source: "repo" });
+      next = { published: content, sha: file.sha, source: "repo" };
     }
 
+    const saved = readDraft(next.sha);
+    setLoaded(next);
+    setDraft(saved ?? structuredClone(next.published));
+    setRestored(saved !== null);
     setCommits(await history(authToken, REPO.contentPath).catch(() => []));
   }, []);
 
@@ -150,30 +182,66 @@ export default function Admin() {
     setToken("");
     setAccount(null);
     setLoaded(null);
+    setDraft(null);
     setPhase("signed-out");
   };
 
-  const seed = async () => {
+  const dirty =
+    loaded !== null &&
+    draft !== null &&
+    JSON.stringify(draft) !== JSON.stringify(loaded.published);
+
+  const edit = (key: keyof PortfolioContent, value: unknown) => {
+    if (!draft || !loaded) return;
+    const next = { ...draft, [key]: value } as PortfolioContent;
+    setDraft(next);
+    saveDraft(loaded.sha, next);
+    setProblems([]);
+    setRestored(false);
+  };
+
+  const discard = () => {
     if (!loaded) return;
+    setDraft(structuredClone(loaded.published));
+    dropDraft();
+    setProblems([]);
+    setRestored(false);
+  };
+
+  const publish = async () => {
+    if (!draft || !loaded) return;
+
+    // The site's own rules, enforced before anything reaches it.
+    const found = validate(draft);
+    setProblems(found);
+    if (found.length) return;
+
     setBusy(true);
     setProblem(null);
     try {
+      const summary = describeChanges(loaded.published, draft);
+      const message = note.trim() ? `${summary}\n\n${note.trim()}` : summary;
+
       const payload = JSON.stringify(
         {
           shape: CONTENT_SHAPE,
           publishedAt: new Date().toISOString(),
-          content: loaded.content,
+          content: draft,
         },
         null,
         2,
       );
+
       const sha = await writeFile(token, {
         path: REPO.contentPath,
         text: payload,
-        message: "Publish: seed content from the bundled copy",
+        message,
         sha: loaded.sha ?? undefined,
       });
-      setLoaded({ ...loaded, sha, source: "repo" });
+
+      setLoaded({ published: structuredClone(draft), sha, source: "repo" });
+      dropDraft();
+      setNote("");
       setCommits(await history(token, REPO.contentPath).catch(() => []));
     } catch (err) {
       setProblem(explainWriteFailure(err));
@@ -207,13 +275,38 @@ export default function Admin() {
             {REPO.owner}/{REPO.name}
           </span>
           <span className="label-mono text-ink-faint">
-            {loaded?.source === "repo" ? "from the repository" : "not published yet"}
+            {dirty
+              ? "unpublished changes"
+              : loaded?.source === "repo"
+                ? "published"
+                : "not published yet"}
           </span>
 
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex flex-wrap items-center gap-2">
             {account && (
-              <span className="label-mono text-ink-faint">{account.login}</span>
+              <span className="label-mono mr-1 text-ink-faint">{account.login}</span>
             )}
+            {dirty && (
+              <button
+                type="button"
+                onClick={discard}
+                className="label-mono h-9 rounded-full border border-rule px-3 transition-colors hover:border-ink"
+              >
+                Discard
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={publish}
+              disabled={busy || (!dirty && loaded?.source === "repo")}
+              className="h-9 rounded-full bg-ink px-4 text-[0.85rem] font-medium text-ground transition-opacity disabled:opacity-40"
+            >
+              {busy
+                ? "Publishing…"
+                : loaded?.source === "repo"
+                  ? "Publish"
+                  : "Publish the current content"}
+            </button>
             <a
               href="/"
               className="label-mono rounded-full border border-rule px-3 py-1.5 transition-colors hover:border-ink"
@@ -247,7 +340,7 @@ export default function Admin() {
                 >
                   {s.label}
                   <span className="label-mono tnum text-ink-faint">
-                    {loaded ? count(loaded.content, s.key) : "-"}
+                    {Array.isArray(draft?.[s.key]) ? (draft[s.key] as unknown[]).length : "1"}
                   </span>
                 </button>
               </li>
@@ -257,42 +350,74 @@ export default function Admin() {
 
         <div className="min-w-0 space-y-6">
           {problem && (
-            <p className="rounded-xl border border-accent/40 bg-accent-soft px-4 py-3 text-[0.9rem] text-accent-text">
+            <p className="rounded-xl border border-accent/40 bg-accent-soft px-4 py-3 text-[0.88rem] leading-relaxed text-accent-text">
               {problem}
             </p>
           )}
 
-          {loaded?.source === "bundled" && (
-            <section className="rounded-xl border border-dashed border-rule-strong p-5">
-              <h2 className="mb-2 text-[1.05rem]">Nothing published yet</h2>
-              <p className="mb-4 max-w-[62ch] text-[0.9rem] leading-relaxed text-ink-soft">
-                The site is running on the copy compiled into it. Publishing
-                that copy as <code className="font-mono">{REPO.contentPath}</code>{" "}
-                makes it the live source, and every later edit becomes a commit
-                on top of it. Nothing on the site changes: the words are
-                identical.
+          {restored && (
+            <p className="rounded-xl border border-rule bg-surface px-4 py-3 text-[0.88rem] text-ink-soft">
+              Picked up an unpublished draft from this browser. Publish it, or
+              Discard to go back to what is live.
+            </p>
+          )}
+
+          {problems.length > 0 && (
+            <div className="rounded-xl border border-accent/40 bg-accent-soft px-4 py-3">
+              <p className="label-mono mb-2 text-accent-text">
+                Fix before publishing
               </p>
-              <button
-                type="button"
-                onClick={seed}
-                disabled={busy}
-                className="h-11 rounded-full bg-ink px-5 text-[0.9rem] font-medium text-ground transition-opacity disabled:opacity-50"
-              >
-                {busy ? "Publishing…" : "Publish the current content"}
-              </button>
-            </section>
+              <ul className="space-y-1.5">
+                {problems.map((p, i) => (
+                  <li
+                    key={i}
+                    className="text-[0.86rem] leading-relaxed text-accent-text"
+                  >
+                    <span className="font-medium">
+                      {p.section} · {p.where}
+                    </span>{" "}
+                    {p.message}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
           <section className="rounded-xl border border-rule p-5">
-            <h2 className="mb-1 text-[1.05rem]">
-              {SECTIONS.find((s) => s.key === active)?.label}
-            </h2>
-            <p className="mb-4 text-[0.85rem] text-ink-faint">
-              {loaded ? count(loaded.content, active) : "-"} item
-              {loaded && count(loaded.content, active) === "1" ? "" : "s"}
-            </p>
-            <Preview content={loaded?.content} section={active} />
+            <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="text-[1.05rem]">{specFor(active).label}</h2>
+              <span className="label-mono text-ink-faint">
+                {specFor(active).shape === "single"
+                  ? "one record"
+                  : `${(draft?.[active] as unknown[])?.length ?? 0} items`}
+              </span>
+            </div>
+
+            {draft && (
+              <SectionEditor
+                spec={specFor(active)}
+                value={draft[active]}
+                onChange={(next) => edit(active, next)}
+              />
+            )}
           </section>
+
+          {dirty && (
+            <section className="rounded-xl border border-rule p-5">
+              <label className="label-mono mb-2 block text-ink-faint">
+                Note for the history (optional)
+              </label>
+              <input
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Why this change, if it is worth remembering"
+                className="h-11 w-full rounded-lg border border-rule bg-ground px-3 text-[0.92rem] outline-none focus:border-ink"
+              />
+              <p className="mt-2 text-[0.8rem] leading-relaxed text-ink-faint">
+                The note listing what changed is written for you either way.
+              </p>
+            </section>
+          )}
 
           {loaded?.source === "repo" && (
             <section className="rounded-xl border border-rule p-5">
@@ -330,50 +455,6 @@ export default function Admin() {
         </div>
       </main>
     </div>
-  );
-}
-
-/** Read-only for now: the editors land on top of this in the next step. */
-function Preview({
-  content,
-  section,
-}: {
-  content?: PortfolioContent;
-  section: keyof PortfolioContent;
-}) {
-  if (!content) return null;
-  const value = content[section];
-
-  if (!Array.isArray(value)) {
-    return (
-      <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-[12rem_minmax(0,1fr)]">
-        {Object.entries(value as unknown as Record<string, unknown>).map(([k, v]) => (
-          <div key={k} className="contents">
-            <dt className="label-mono text-ink-faint">{k}</dt>
-            <dd className="mb-2 min-w-0 truncate text-[0.9rem] text-ink-soft sm:mb-0">
-              {typeof v === "object" && v !== null
-                ? JSON.stringify(v)
-                : String(v ?? "-")}
-            </dd>
-          </div>
-        ))}
-      </dl>
-    );
-  }
-
-  return (
-    <ul className="divide-y divide-rule">
-      {(value as unknown as Record<string, unknown>[]).map((item, i) => (
-        <li key={i} className="flex flex-wrap items-baseline gap-x-3 py-2.5">
-          <span className="text-[0.95rem]">
-            {String(item.title ?? item.company ?? item.group ?? item.slug ?? i)}
-          </span>
-          <span className="min-w-0 truncate text-[0.85rem] text-ink-faint">
-            {String(item.summary ?? item.position ?? item.blurb ?? item.note ?? "")}
-          </span>
-        </li>
-      ))}
-    </ul>
   );
 }
 
