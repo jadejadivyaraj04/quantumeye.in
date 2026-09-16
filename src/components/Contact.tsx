@@ -78,9 +78,20 @@ export default function Contact() {
       setForm({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
       setStatus("error");
+      // EmailJS rejects with { status, text }, not an Error, so the generic
+      // branch used to swallow the only useful part: "text" says whether the
+      // origin is blocked, the template id is wrong, or the mail service
+      // needs reconnecting.
+      const detail =
+        typeof err === "object" && err !== null && "text" in err
+          ? String((err as { text: unknown }).text)
+          : err instanceof Error
+            ? err.message
+            : "";
+      console.error("[contact] send failed:", err);
       setError(
-        err instanceof Error
-          ? `Could not send: ${err.message}. Email me directly instead.`
+        detail
+          ? `Could not send: ${detail}. Email me directly instead.`
           : "Could not send. Email me directly instead.",
       );
     }
