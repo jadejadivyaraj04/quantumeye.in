@@ -1,4 +1,4 @@
-import { canWrite, whoAmI, type Account } from "./github";
+import { canSeeRepo, whoAmI, type Account } from "./github";
 
 /**
  * The admin session: one token, kept on this machine.
@@ -61,23 +61,18 @@ export async function verify(token: string): Promise<SessionCheck> {
     };
   }
 
-  let writable = false;
+  // Visibility only. Whether the token may *write* cannot be established
+  // without writing - GitHub reports the account's permissions on that
+  // endpoint, not the token's - so a refusal is explained precisely at the
+  // first publish instead of being wrongly promised here.
   try {
-    writable = await canWrite(trimmed);
+    await canSeeRepo(trimmed);
   } catch {
-    return {
-      ok: false,
-      problem:
-        "That token cannot see quantumeye.in. Check it grants access to this repository.",
-    };
-  }
-
-  if (!writable) {
     return {
       ok: false,
       account,
       problem:
-        "That token can read the repository but not write to it. It needs Contents: read and write.",
+        "That token cannot see quantumeye.in. Under Repository access, give it access to this repository.",
     };
   }
 

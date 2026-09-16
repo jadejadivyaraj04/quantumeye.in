@@ -6,6 +6,7 @@ import {
   type PortfolioContent,
 } from "../data/content";
 import {
+  explainWriteFailure,
   history,
   rawUrl,
   readFile,
@@ -175,7 +176,7 @@ export default function Admin() {
       setLoaded({ ...loaded, sha, source: "repo" });
       setCommits(await history(token, REPO.contentPath).catch(() => []));
     } catch (err) {
-      setProblem((err as Error).message);
+      setProblem(explainWriteFailure(err));
     } finally {
       setBusy(false);
     }

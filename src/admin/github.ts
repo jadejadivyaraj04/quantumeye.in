@@ -87,16 +87,44 @@ export async function whoAmI(token: string): Promise<Account> {
 }
 
 /**
- * Whether this token can actually write to the repo. A token that reads but
- * cannot write looks fine until the first publish fails, so it is checked at
- * sign-in instead.
+ * Whether the token can see the repository at all.
+ *
+ * Note what this does NOT tell you: `permissions.push` on this response
+ * describes the *account's* access, not the token's. A fine-grained token with
+ * Contents left at "no access" reports push: true here and then fails on the
+ * first write with a flat "Resource not accessible by personal access token".
+ * There is no cheap probe for write capability short of writing, so the honest
+ * design is to check visibility here and explain precisely when a write is
+ * refused - see [explainWriteFailure].
  */
-export async function canWrite(token: string): Promise<boolean> {
-  const repo = await call<{ permissions?: { push?: boolean } }>(
-    token,
-    `/repos/${REPO.owner}/${REPO.name}`,
-  );
-  return repo.permissions?.push === true;
+export async function canSeeRepo(token: string): Promise<boolean> {
+  await call(token, `/repos/${REPO.owner}/${REPO.name}`);
+  return true;
+}
+
+/** GitHub's write refusals, in terms of what to change. */
+export function explainWriteFailure(err: unknown): string {
+  if (!(err instanceof GitHubError)) return (err as Error).message;
+
+  if (err.status === 403 || err.status === 404) {
+    return (
+      "GitHub refused the write: " +
+      err.message +
+      ". The token needs Contents: Read and write on " +
+      `${REPO.owner}/${REPO.name}. In GitHub → Settings → Developer settings → ` +
+      "Fine-grained tokens, open this token and check two things: Repository " +
+      `access includes ${REPO.name}, and under Permissions → Repository ` +
+      "permissions, Contents is set to Read and write. A classic token needs " +
+      "the repo scope instead. Saving the change takes effect immediately - no " +
+      "new token required."
+    );
+  }
+
+  if (err.status === 409) {
+    return "The file changed in the repository since this page loaded. Reload and try again.";
+  }
+
+  return `GitHub returned ${err.status}: ${err.message}`;
 }
 
 export interface RepoFile {
