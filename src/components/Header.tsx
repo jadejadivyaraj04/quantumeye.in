@@ -15,7 +15,11 @@ import { ease } from "../lib/motion";
 export default function Header() {
   const { content } = useContent();
   const { identity } = content;
-  const active = useActiveSection(sections.map((s) => s.id));
+  /* The hero is tracked as well, even though it has no nav item. Without it
+     nothing intersects the detection band at the top of the page, the tracker
+     holds whatever section you last passed, and the header keeps announcing
+     "Lab" while you are looking at the hero. */
+  const active = useActiveSection(["top", ...sections.map((s) => s.id)]);
   const scrolled = useScrolled(20);
   /* Past the hero the header condenses: less height, a smaller mark, and the
      name swapped for where you actually are. Coming back to the top restores
@@ -86,7 +90,9 @@ export default function Header() {
             <span className="grid">
               <span
                 className={`col-start-1 row-start-1 font-display text-[0.94rem] font-semibold tracking-tight whitespace-nowrap transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  condensed ? "max-md:-translate-y-1.5 max-md:opacity-0" : ""
+                  condensed && here
+                    ? "max-md:-translate-y-1.5 max-md:opacity-0"
+                    : ""
                 }`}
               >
                 {identity.firstName}
@@ -104,11 +110,11 @@ export default function Header() {
                 className={`label-mono col-start-1 row-start-1 self-center whitespace-nowrap transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden ${
                   condensed ? "text-ground/70" : "text-ink-soft"
                 } ${
-                  condensed
+                  condensed && here
                     ? "translate-y-0 opacity-100"
                     : "translate-y-1.5 opacity-0"
                 }`}
-                aria-hidden={!condensed}
+                aria-hidden={!condensed || !here}
               >
                 {here}
               </span>
