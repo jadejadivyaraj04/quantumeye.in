@@ -37,7 +37,7 @@ export default function Writing() {
           intro="Published on Medium. Release engineering, tooling, and the parts of mobile work that only show up once an app is in front of users."
         />
 
-        <ul className="grid gap-px overflow-hidden rounded-2xl border border-rule bg-rule md:grid-cols-2">
+        <ul className="grid gap-px overflow-hidden rounded-3xl border border-rule bg-rule md:grid-cols-2">
           {sorted.map((a, i) => (
             <motion.li
               key={a.url}

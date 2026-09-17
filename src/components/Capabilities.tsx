@@ -52,7 +52,7 @@ export default function Capabilities() {
                 {on && (
                   <motion.span
                     layoutId="cap-pill"
-                    className="absolute inset-0 rounded-full bg-ink"
+                    className="absolute inset-0 rounded-full bg-accent"
                     transition={{ type: "spring", stiffness: 360, damping: 30 }}
                   />
                 )}

@@ -49,7 +49,7 @@ export default function Header() {
           condensed
             ? "border-b border-transparent"
             : scrolled
-              ? "border-b border-rule bg-ground/85 backdrop-blur-xl"
+              ? "glass border-x-0 border-t-0"
               : "border-b border-transparent"
         }`}
       >
@@ -64,15 +64,13 @@ export default function Header() {
           aria-label="Primary"
           className={`mx-auto flex w-full items-center justify-between transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
             condensed
-              ? "mt-2.5 max-w-[calc(100%-1.5rem)] gap-1 rounded-full bg-ink px-2.5 py-2 text-ground shadow-lift md:max-w-[55rem]"
-              : "mt-0 max-w-[88rem] rounded-none bg-transparent px-5 py-3.5 shadow-none sm:px-7 lg:px-10"
+              ? "glass-strong mt-2.5 max-w-[calc(100%-1.5rem)] gap-1 rounded-full px-2.5 py-2 shadow-lift md:max-w-[55rem]"
+              : "mt-0 max-w-[88rem] rounded-none border-transparent bg-transparent px-5 py-3.5 shadow-none sm:px-7 lg:px-10"
           }`}
         >
           <a
             href="#top"
-            className={`group flex h-11 items-center gap-2.5 transition-colors duration-[650ms] ${
-              condensed ? "pl-1.5 text-ground" : "text-ink"
-            }`}
+            className="group flex h-11 items-center gap-2.5 pl-1.5 text-ink"
             aria-label="Back to top"
           >
             <span
@@ -80,7 +78,7 @@ export default function Header() {
                 condensed ? "scale-[0.84]" : "scale-100"
               }`}
             >
-              <Logo onDark={condensed} />
+              <Logo />
             </span>
 
             {/* Name and place, stacked in one cell and crossfaded. The place
@@ -98,7 +96,7 @@ export default function Header() {
                 {identity.firstName}
                 <span
                   className={`hidden sm:inline ${
-                    condensed ? "text-ground/60" : "text-ink-soft"
+  "text-ink-soft"
                   }`}
                 >
                   {" "}
@@ -108,7 +106,7 @@ export default function Header() {
 
               <span
                 className={`label-mono col-start-1 row-start-1 self-center whitespace-nowrap transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden ${
-                  condensed ? "text-ground/70" : "text-ink-soft"
+"text-ink-soft"
                 } ${
                   condensed && here
                     ? "translate-y-0 opacity-100"
@@ -134,8 +132,8 @@ export default function Header() {
                     aria-current={on ? "true" : undefined}
                     className={`relative flex items-center transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       condensed
-                        ? `label-mono h-9 px-3 ${on ? "text-ground" : "text-ground/60 hover:text-ground"}`
-                        : `h-11 px-3.5 text-[0.86rem] ${on ? "text-ink" : "text-ink-soft hover:text-ink"}`
+                        ? `h-9 px-3 text-[0.82rem] font-medium ${on ? "text-ink" : "text-ink-soft hover:text-ink"}`
+                        : `h-11 px-3.5 text-[0.86rem] font-medium ${on ? "text-ink" : "text-ink-soft hover:text-ink"}`
                     }`}
                   >
                     {s.label}
@@ -143,7 +141,7 @@ export default function Header() {
                       <motion.span
                         layoutId="nav-active"
                         className={`absolute inset-x-2.5 bottom-1.5 h-[2px] rounded-full ${
-                          condensed ? "bg-ground/70" : "bg-accent"
+"bg-accent"
                         }`}
                         transition={{ type: "spring", stiffness: 380, damping: 32 }}
                       />
@@ -157,10 +155,10 @@ export default function Header() {
           <div className="flex items-center gap-1.5">
             <a
               href="#contact"
-              className={`hidden h-9 items-center rounded-full px-4 transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:flex ${
+              className={`hidden h-9 items-center rounded-full px-4 text-[0.82rem] font-medium transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:flex ${
                 condensed
-                  ? "label-mono bg-accent text-ground hover:bg-accent-text"
-                  : "label-mono border border-rule-strong text-ink hover:border-ink"
+                  ? "bg-accent text-white hover:brightness-110"
+                  : "bg-accent text-white hover:brightness-110"
               }`}
             >
               Contact
@@ -173,7 +171,7 @@ export default function Header() {
               aria-expanded={open}
               className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors md:hidden ${
                 condensed
-                  ? "text-ground hover:bg-ground/15"
+                  ? "text-ink hover:bg-ink/5"
                   : "text-ink-soft hover:bg-surface hover:text-ink"
               }`}
             >

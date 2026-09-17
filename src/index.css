@@ -2,39 +2,94 @@
 
 /* ─────────────────────────────────────────────────── design tokens ── */
 /*
- * Light only.
+ * Apple Human Interface palette, per the apple-design skill.
  *
- * The palette is sampled from the portrait rather than picked in the
- * abstract: the accent is the oxblood of the shirt (#3D1020–#752F3F), the
- * ink comes from the hair (#3E3435), and --c-studio is the average of the
- * photograph's own backdrop, so the panel it sits in matches the paper
- * behind his shoulder instead of fighting it.
+ * The semantic names are unchanged - ground, surface, ink, rule, accent -
+ * so every component keeps its classes and this file alone decides how the
+ * site looks. What they resolve to is now Apple's system: near-white over
+ * #f5f5f7, #1d1d1f ink, #0071e3 for anything actionable.
+ *
+ * Dark mode is included because the system is built around both. It follows
+ * the OS and has no toggle. Delete the prefers-color-scheme block to go back
+ * to light only.
  */
 
 :root {
-  --c-ground: #faf9f7;
-  --c-surface: #f2f0ec;
-  --c-surface-deep: #e9e6e1;
-  --c-studio: #d8d5d0;
+  color-scheme: light dark;
 
-  --c-ink: #191415;
-  --c-ink-soft: #5c5457;
-  --c-ink-faint: #8d8588;
+  /* Backgrounds */
+  --c-ground: #ffffff;
+  --c-surface: #f5f5f7;
+  --c-surface-deep: #e8e8ed;
+  --c-studio: #d2d2d7;
 
-  --c-rule: #e3e0db;
-  --c-rule-strong: #c7c3bd;
+  /* Text */
+  --c-ink: #1d1d1f;
+  --c-ink-soft: #6e6e73;
+  --c-ink-faint: #86868b;
 
-  --c-accent: #7b2434;
-  --c-accent-text: #6b1e2c;
-  --c-accent-soft: #f3e6e8;
+  /* Hairlines */
+  --c-rule: rgba(0, 0, 0, 0.1);
+  --c-rule-strong: rgba(0, 0, 0, 0.18);
 
-  --c-ok: #2f6b4f;
-  --c-ok-soft: #e3ede7;
+  /* Accent: the one colour that means "you can act on this" */
+  --c-accent: #0071e3;
+  --c-accent-text: #0066cc;
+  --c-accent-soft: rgba(0, 113, 227, 0.1);
 
-  --shadow-card: 0 1px 2px rgb(25 20 21 / 0.04), 0 10px 28px -14px rgb(25 20 21 / 0.13);
-  --shadow-lift: 0 2px 4px rgb(25 20 21 / 0.05), 0 26px 54px -22px rgb(25 20 21 / 0.24);
-  --shadow-device: 0 4px 14px rgb(25 20 21 / 0.12), 0 34px 68px -26px rgb(25 20 21 / 0.4);
-  --shadow-plate: 0 1px 3px rgb(25 20 21 / 0.06), 0 30px 60px -30px rgb(25 20 21 / 0.3);
+  --c-ok: #30d158;
+  --c-ok-soft: rgba(48, 209, 88, 0.12);
+
+  /* Glass: the translucent surfaces the system leans on */
+  --c-glass: rgba(255, 255, 255, 0.72);
+  --c-glass-strong: rgba(255, 255, 255, 0.86);
+  --c-glass-edge: rgba(255, 255, 255, 0.5);
+
+  /* Layered shadows - a tight contact shadow under a wide diffuse one */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 12px rgb(0 0 0 / 0.08);
+  --shadow-lift: 0 8px 24px rgb(0 0 0 / 0.08), 0 16px 32px rgb(0 0 0 / 0.08);
+  --shadow-device: 0 24px 48px rgb(0 0 0 / 0.12), 0 2px 8px rgb(0 0 0 / 0.06);
+  --shadow-plate: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px rgb(0 0 0 / 0.1);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 500ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-ground: #000000;
+    --c-surface: #1d1d1f;
+    --c-surface-deep: #2c2c2e;
+    --c-studio: #3a3a3c;
+
+    --c-ink: #f5f5f7;
+    --c-ink-soft: #a1a1a6;
+    --c-ink-faint: #86868b;
+
+    --c-rule: rgba(255, 255, 255, 0.12);
+    --c-rule-strong: rgba(255, 255, 255, 0.22);
+
+    --c-accent: #0a84ff;
+    --c-accent-text: #409cff;
+    --c-accent-soft: rgba(10, 132, 255, 0.16);
+
+    --c-ok: #32d74b;
+    --c-ok-soft: rgba(50, 215, 75, 0.16);
+
+    --c-glass: rgba(29, 29, 31, 0.72);
+    --c-glass-strong: rgba(29, 29, 31, 0.88);
+    --c-glass-edge: rgba(255, 255, 255, 0.12);
+
+    /* Shadows read as haze on black; depth comes from the surface step. */
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.5), 0 4px 12px rgb(0 0 0 / 0.4);
+    --shadow-lift: 0 8px 24px rgb(0 0 0 / 0.5), 0 16px 32px rgb(0 0 0 / 0.4);
+    --shadow-device: 0 24px 48px rgb(0 0 0 / 0.6), 0 2px 8px rgb(0 0 0 / 0.4);
+    --shadow-plate: 0 1px 2px rgb(0 0 0 / 0.5), 0 12px 32px rgb(0 0 0 / 0.45);
+  }
 }
 
 @theme inline {
@@ -57,14 +112,26 @@
   --color-ok: var(--c-ok);
   --color-ok-soft: var(--c-ok-soft);
 
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Newsreader", Georgia, "Times New Roman", serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --color-glass: var(--c-glass);
+  --color-glass-strong: var(--c-glass-strong);
+  --color-glass-edge: var(--c-glass-edge);
+
+  /* One family, as the system intends: SF on Apple hardware, the platform
+     UI font elsewhere. The serif and the grotesque are gone. */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
 
   --shadow-card: var(--shadow-card);
   --shadow-lift: var(--shadow-lift);
   --shadow-device: var(--shadow-device);
   --shadow-plate: var(--shadow-plate);
+
+  /* Apple's radii run large: 12 on controls, 20-24 on cards. */
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 28px;
 }
 
 /* ────────────────────────────────────────────────────────── base ──── */
@@ -74,7 +141,6 @@
     scroll-behavior: smooth;
     scroll-padding-top: 5.5rem;
     -webkit-text-size-adjust: 100%;
-    color-scheme: light;
   }
 
   body {
@@ -83,15 +149,17 @@
     color: var(--color-ink);
     font-family: var(--font-body);
     font-size: 1.0625rem;
-    line-height: 1.65;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    letter-spacing: -0.03em;
     text-wrap: balance;
     margin: 0;
   }
@@ -115,12 +183,17 @@
 
 /* ───────────────────────────────────────────────────── utilities ──── */
 
+/*
+ * Small labels. Keeps its name so fifteen components need no edit, but the
+ * treatment is now the system's: sentence case, semibold, tight - Apple does
+ * not shout section labels in letterspaced mono.
+ */
 @utility label-mono {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
 }
 
 @utility tnum {
@@ -179,6 +252,34 @@
   .band {
     padding-block: var(--band);
   }
+}
+
+/*
+ * Frosted glass. Used where something floats over content - the header, the
+ * dialogs - and nowhere else, because the effect costs compositing on every
+ * scroll frame and stops meaning anything if it is everywhere.
+ */
+@utility glass {
+  background: var(--c-glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--c-glass-edge);
+}
+
+@utility glass-strong {
+  background: var(--c-glass-strong);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+/* The headline treatment: ink into accent, so the name carries the one
+   colour on the page rather than a decorative gradient. */
+@utility gradient-text {
+  background: linear-gradient(135deg, var(--c-ink) 0%, var(--c-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* ──────────────────────────────────────────────────── keyframes ──── */

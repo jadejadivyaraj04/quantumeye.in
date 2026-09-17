@@ -189,7 +189,7 @@ export default function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={inView}
             transition={{ duration: 0.5, ease }}
-            className="relative rounded-2xl border border-rule bg-surface/50 p-6 sm:p-8"
+            className="relative rounded-3xl border border-rule bg-surface/50 p-6 sm:p-8"
           >
             <AnimatePresence mode="wait">
               {status === "sent" ? (
@@ -282,7 +282,7 @@ export default function Contact() {
                     <button
                       type="submit"
                       disabled={status === "sending"}
-                      className="group relative flex h-12 items-center gap-2.5 overflow-hidden rounded-full bg-ink px-6 text-[0.9rem] font-medium text-ground disabled:opacity-60"
+                      className="group relative flex h-12 items-center gap-2.5 overflow-hidden rounded-full bg-accent px-7 text-[0.94rem] font-medium text-white shadow-[0_4px_16px_rgb(0_113_227/0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgb(0_113_227/0.4)] motion-reduce:hover:translate-y-0 disabled:opacity-60"
                     >
                       <span className="absolute inset-0 translate-y-full bg-accent transition-transform duration-300 ease-out group-hover:translate-y-0 group-disabled:translate-y-full" />
                       {status === "sending" ? (
@@ -353,7 +353,7 @@ function Field({
   hint?: string;
 }) {
   const shared =
-    "w-full rounded-lg border border-rule bg-ground px-3.5 py-3 text-[0.95rem] text-ink transition-colors placeholder:text-ink-faint/60 hover:border-rule-strong focus:border-accent focus:outline-none";
+    "w-full rounded-xl border border-rule bg-ground px-4 py-3.5 text-[0.95rem] text-ink transition-all duration-200 placeholder:text-ink-faint/60 hover:border-rule-strong focus:border-accent focus:shadow-[0_0_0_4px_var(--c-accent-soft)] focus:outline-none";
 
   return (
     <div className={textarea ? "" : undefined}>

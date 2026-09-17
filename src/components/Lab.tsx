@@ -130,7 +130,7 @@ export default function Lab() {
               <button
                 type="button"
                 onClick={() => setOpen(item)}
-                className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-rule bg-surface/40 text-left transition-all duration-300 hover:-translate-y-1 hover:border-rule-strong hover:shadow-card"
+                className="group flex h-full w-full flex-col overflow-hidden rounded-3xl border border-rule bg-surface text-left shadow-card transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-lift motion-reduce:hover:translate-y-0"
               >
                 <Lid item={item} />
 

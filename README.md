@@ -207,3 +207,19 @@ Two things the old deployment got wrong and this one needs right:
 2. **Prerender if you can.** Nothing here needs a server, but the page is
    client-rendered, so crawlers must execute the bundle. The content changes
    rarely enough that a build-time HTML snapshot is close to free.
+
+## The apple-design branch
+
+`redesign/apple` is the site rebuilt on Apple's Human Interface system, per the
+apple-design skill: SF/system font throughout, `#0071e3` for anything
+actionable, `#f5f5f7` surfaces, larger radii, layered shadows, frosted glass on
+anything that floats, and dark mode following the OS.
+
+It is a presentation change only - content, the publishing pipeline, the
+dashboard and every component's structure are untouched. Nearly all of it is
+the token block at the top of `index.css`: the semantic names (ground, ink,
+rule, accent) stayed, so remapping what they resolve to re-skinned the site.
+
+What it deliberately overrides from `main`: light-only, the oxblood sampled
+from the portrait, and the serif/grotesque pairing. Those were the previous
+identity; this branch is the other answer. Compare them before merging.

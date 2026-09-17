@@ -44,7 +44,7 @@ export default function Work() {
               <button
                 type="button"
                 onClick={() => setOpenStudy(study)}
-                className="group relative block w-full overflow-hidden rounded-2xl border border-rule bg-surface/40 text-left transition-colors duration-300 hover:border-rule-strong"
+                className="group relative block w-full overflow-hidden rounded-3xl border border-rule bg-surface text-left shadow-card transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-lift motion-reduce:hover:translate-y-0"
               >
                 {/* Hue wash, revealed on hover */}
                 <span
@@ -73,9 +73,7 @@ export default function Work() {
 
                   <div className="min-w-0 flex-1">
                     <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                      <span className="label-mono text-accent-text">
-                        {study.client}
-                      </span>
+                      <span className="label-mono text-accent-text">{study.client}</span>
                       <span className="h-3 w-px bg-rule-strong" />
                       <span className="label-mono text-ink-faint">
                         {study.industry}
@@ -140,7 +138,7 @@ export default function Work() {
               <button
                 type="button"
                 onClick={() => setOpenStudy(study)}
-                className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-rule bg-surface/40 p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:border-rule-strong hover:shadow-card"
+                className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-rule bg-surface p-6 text-left shadow-card transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-lift motion-reduce:hover:translate-y-0"
               >
                 <span
                   aria-hidden="true"

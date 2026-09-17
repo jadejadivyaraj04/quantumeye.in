@@ -53,16 +53,16 @@ export default function Hero() {
               style={{ animationDelay: "0.15s" }}
             >
               <span className="mt-[0.45em] h-1.5 w-1.5 shrink-0 rounded-full bg-ok animate-soft-pulse" />
-              <span className="label-mono min-w-0 leading-[1.5] text-ink-soft">
+              <span className="min-w-0 text-[0.86rem] leading-[1.5] font-medium text-ink-soft">
                 {identity.availableNote}
               </span>
             </div>
 
             <h1 className="mb-8 font-display text-[clamp(2.7rem,9.2vw,5.4rem)] leading-[0.94] font-bold tracking-[-0.042em]">
               {words.map((word, i) => (
-                <span key={word} className="block overflow-hidden pb-[0.05em]">
+                <span key={word} className="block overflow-hidden pb-[0.08em]">
                   <span
-                    className="mask-up block"
+                    className={`mask-up block ${i === words.length - 1 ? "gradient-text" : ""}`}
                     style={{ animationDelay: `${0.24 + i * 0.1}s` }}
                   >
                     {word}
@@ -74,7 +74,9 @@ export default function Hero() {
             <div className="rise" style={{ animationDelay: "0.56s" }}>
               <div className="mb-5 flex items-center gap-3">
                 <span className="h-px w-9 bg-accent" />
-                <p className="label-mono text-accent-text">{identity.role}</p>
+                <p className="text-[0.9rem] font-semibold tracking-tight text-accent-text">
+                  {identity.role}
+                </p>
               </div>
 
               <p className="mb-9 max-w-[42ch] text-[1.08rem] leading-[1.6] text-ink-soft sm:text-[1.18rem]">
@@ -85,9 +87,8 @@ export default function Hero() {
                 <a
                   href={identity.resumeUrl ?? "#contact"}
                   {...(hasResume ? { download: true } : {})}
-                  className="group relative flex h-12 items-center gap-2.5 overflow-hidden rounded-full bg-ink px-6 text-[0.9rem] font-medium text-ground"
+                  className="group flex h-12 items-center gap-2.5 rounded-full bg-accent px-7 text-[0.94rem] font-medium text-white shadow-[0_4px_16px_rgb(0_113_227/0.3)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgb(0_113_227/0.4)] motion-reduce:hover:translate-y-0"
                 >
-                  <span className="absolute inset-0 translate-y-full bg-accent transition-transform duration-300 ease-out group-hover:translate-y-0" />
                   <FileText size={15} className="relative" strokeWidth={2.2} />
                   <span className="relative">
                     {hasResume ? "Download résumé" : "Request résumé"}
@@ -96,7 +97,7 @@ export default function Hero() {
 
                 <a
                   href="#work"
-                  className="group flex h-12 items-center gap-2 rounded-full border border-rule-strong px-6 text-[0.9rem] font-medium transition-colors hover:border-ink"
+                  className="group flex h-12 items-center gap-2 rounded-full border-2 border-accent px-6 text-[0.94rem] font-medium text-accent-text transition-all duration-300 hover:bg-accent hover:text-white"
                 >
                   See the work
                   <ArrowDown
@@ -114,7 +115,7 @@ export default function Hero() {
             className="fade m-0 max-w-[24rem] lg:max-w-none lg:pt-2"
             style={{ y: plateY }}
           >
-            <div className="studio-plate relative overflow-hidden rounded-[1.75rem] shadow-plate">
+            <div className="relative overflow-hidden rounded-[24px] bg-surface shadow-plate">
               <img
                 src="/portrait.jpg"
                 srcSet="/portrait-sm.jpg 668w, /portrait.jpg 1336w"
@@ -129,10 +130,7 @@ export default function Hero() {
               {/* Barely-there falloff at the base, following the direction the
                   photograph's own backdrop already darkens. Kept light: any
                   heavier and it greys out his forearms. */}
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-[#b9aea9]/20"
-              />
+
             </div>
 
             {/* Magazine-style credit line. */}

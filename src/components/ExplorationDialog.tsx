@@ -36,7 +36,7 @@ export default function ExplorationDialog({
       {item && (
         <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center">
           <motion.div
-            className="absolute inset-0 bg-ink/45 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/40 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -48,7 +48,7 @@ export default function ExplorationDialog({
             role="dialog"
             aria-modal="true"
             aria-labelledby="lab-title"
-            className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-3xl border border-rule bg-ground shadow-lift sm:max-h-[88vh] sm:rounded-3xl"
+            className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[28px] border border-rule bg-ground shadow-lift sm:max-h-[88vh] sm:rounded-[28px]"
             initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.985 }}
